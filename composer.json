@@ -1,0 +1,212 @@
+{
+    "name": "devcode-it/openstamanager",
+    "description": "Gestionale open-source per assistenza tecnica e fatturazione elettronica",
+    "license": "GPL-3.0",
+    "keywords": [
+        "gestionale",
+        "assistenza tecnica",
+        "fatturazione elettronica",
+        "open-source"
+    ],
+    "homepage": "https://www.openstamanager.com/",
+    "authors": [{
+        "name": "DevCode s.r.l.",
+        "email": "info@openstamanager.com"
+    }],
+    "type": "project",
+    "require": {
+        "php": "^8.1",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-fileinfo": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-simplexml": "*",
+        "ext-xsl": "*",
+        "ext-zip": "*",
+        "api-platform/laravel": "^4.1",
+        "davidepastore/codice-fiscale": "^0.10.0",
+        "devcode-it/ical-easy-reader": "dev-main",
+        "devcode-it/sdd_ita": "dev-master",
+        "digitick/sepa-xml": "^3.0",
+        "doctrine/sql-formatter": "^1.5",
+        "dragonmantank/cron-expression": "^3.0",
+        "endroid/qr-code": "^6.0",
+        "ergebnis/json-printer": "^3.8",
+        "ezyang/htmlpurifier": "^4.8",
+        "filp/whoops": "^2.15.0",
+        "greenlion/php-sql-parser": "^4.5",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "ifsnop/mysqldump-php": "^2.3",
+        "illuminate/cache": "^12.0",
+        "illuminate/database": "^12.0",
+        "illuminate/filesystem": "^12.0",
+        "intervention/image": "^3.0",
+        "jurosh/pdf-merge": "^2.1",
+        "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^2.0",
+        "league/csv": "^9.7.0",
+        "league/flysystem": "^3.0",
+        "league/flysystem-ftp": "^3.0",
+        "league/oauth2-client": "^2.6",
+        "league/oauth2-google": "^4.0",
+        "monolog/monolog": "^3.0",
+        "mpdf/mpdf": "^v8.0.10",
+        "owasp/csrf-protector-php": "^1.0",
+        "phpmailer/phpmailer": "^7.0",
+        "picqer/php-barcode-generator": "^3.2",
+        "respect/validation": "^2.0",
+        "servo/fluidxml": "^2.0",
+        "slim/flash": "^0.4.0",
+        "spatie/laravel-route-attributes": "^1.25",
+        "spipu/html2pdf": "^5.0.0",
+        "symfony/filesystem": "^7.0",
+        "symfony/finder": "^7.0",
+        "symfony/framework-bundle": "^7.0",
+        "symfony/polyfill-ctype": "^1.8",
+        "symfony/translation": "^7.0",
+        "symfony/var-dumper": "^7.0",
+        "thenetworg/oauth2-azure": "^2.0",
+        "voku/stringy": "^6.0.0",
+        "willdurand/geocoder": "^5.0"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.23",
+        "friendsofphp/php-cs-fixer": "^3.53",
+        "laravel/pail": "^1.2.2",
+        "laravel/pint": "^1.24",
+        "laravel/sail": "^1.41",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "phpunit/phpunit": "^12.4.4",
+        "rector/rector": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/",
+            "Modules\\Aggiornamenti\\": ["modules/aggiornamenti/custom/src/", "modules/aggiornamenti/src/"],
+            "Modules\\Anagrafiche\\": ["modules/anagrafiche/custom/src/", "modules/anagrafiche/src/"],
+            "Modules\\AttributiCombinazioni\\": ["modules/attributi_combinazioni/custom/src/", "modules/attributi_combinazioni/src/"],
+            "Modules\\Backups\\": ["modules/backups/custom/src/", "modules/backups/src/"],
+            "Modules\\CombinazioniArticoli\\": ["modules/combinazioni_articoli/custom/src/", "modules/combinazioni_articoli/src/"],
+            "Modules\\Emails\\": ["modules/emails/custom/src/", "modules/emails/src/"],
+            "Modules\\Articoli\\": ["modules/articoli/custom/src/", "modules/articoli/src/"],
+            "Modules\\Checklists\\": ["modules/checklists/custom/src/", "modules/checklists/src/"],
+            "Modules\\Ritenute\\": ["modules/ritenute/custom/src/", "modules/ritenute/src/"],
+            "Modules\\RitenuteContributi\\": ["modules/ritenute_contributi/custom/src/", "modules/ritenute_contributi/src/"],
+            "Modules\\Rivalse\\": ["modules/rivalse/custom/src/", "modules/rivalse/src/"],
+            "Modules\\Newsletter\\": ["modules/newsletter/custom/src/", "modules/newsletter/src/"],
+            "Modules\\ListeNewsletter\\": ["modules/liste_newsletter/custom/src/", "modules/liste_newsletter/src/"],
+            "Modules\\Iva\\": ["modules/iva/custom/src/", "modules/iva/src/"],
+            "Modules\\DDT\\": ["modules/ddt/custom/src/", "modules/ddt/src/"],
+            "Modules\\Fatture\\": ["modules/fatture/custom/src/", "modules/fatture/src/"],
+            "Modules\\ListiniCliente\\": ["modules/listini_cliente/custom/src/", "modules/listini_cliente/src/"],
+            "Modules\\Ordini\\": ["modules/ordini/custom/src/", "modules/ordini/src/"],
+            "Modules\\Preventivi\\": ["modules/preventivi/custom/src/", "modules/preventivi/src/"],
+            "Modules\\Contratti\\": ["modules/contratti/custom/src/", "modules/contratti/src/"],
+            "Modules\\Interventi\\": ["modules/interventi/custom/src/", "modules/interventi/src/"],
+            "Modules\\Pagamenti\\": ["modules/pagamenti/custom/src/", "modules/pagamenti/src/"],
+            "Modules\\Statistiche\\": ["modules/statistiche/custom/src/", "modules/statistiche/src/"],
+            "Modules\\Scadenzario\\": ["modules/scadenzario/custom/src/", "modules/scadenzario/src/"],
+            "Modules\\PrimaNota\\": ["modules/primanota/custom/src/", "modules/primanota/src/"],
+            "Modules\\Utenti\\": ["modules/utenti/custom/src/", "modules/utenti/src/"],
+            "Modules\\Segmenti\\": ["modules/segmenti/custom/src/", "modules/segmenti/src/"],
+            "Modules\\StatoServizi\\": ["modules/stato_servizi/custom/src/", "modules/stato_servizi/src/"],
+            "Modules\\StatiIntervento\\": ["modules/stati_intervento/custom/src/", "modules/stati_intervento/src/"],
+            "Modules\\StatiPreventivo\\": ["modules/stati_preventivo/custom/src/", "modules/stati_preventivo/src/"],
+            "Modules\\StatiContratto\\": ["modules/stati_contratto/custom/src/", "modules/stati_contratto/src/"],
+            "Modules\\StatiOrdine\\": ["modules/stati_ordine/custom/src/", "modules/stati_ordine/src/"],
+            "Modules\\TipiIntervento\\": ["modules/tipi_intervento/custom/src/", "modules/tipi_intervento/src/"],
+            "Modules\\CategorieDocumentali\\": ["modules/categorie_documenti/custom/src/", "modules/categorie_documenti/src/"],
+            "Modules\\PianiSconto\\": ["modules/piano_sconto/custom/src/", "modules/piano_sconto/src/"],
+            "Modules\\Impianti\\": ["modules/impianti/custom/src/", "modules/impianti/src/"],
+            "Modules\\Importazione\\": ["modules/import/custom/src/", "modules/import/src/"],
+            "Modules\\Impostazioni\\": ["modules/impostazioni/custom/src/", "modules/impostazioni/src/"],
+            "Modules\\Partitario\\": ["modules/partitario/custom/src/", "modules/partitario/src/"],
+            "Modules\\StatoEmail\\": ["modules/stato_email/custom/src/", "modules/stato_email/src/"],
+            "Modules\\FileAdapters\\": ["modules/adattatori_archiviazione/custom/src/", "modules/adattatori_archiviazione/src/"],
+            "Modules\\CategorieFiles\\": ["modules/categorie_files/custom/src/", "modules/categorie_files/src/"],
+            "Plugins\\AssicurazioneCrediti\\": ["plugins/assicurazione_crediti/custom/src/", "plugins/assicurazione_crediti/src/"],
+            "Plugins\\ExportFE\\": ["plugins/exportFE/custom/src/", "plugins/exportFE/src/"],
+            "Plugins\\ImportFE\\": ["plugins/importFE/custom/src/", "plugins/importFE/src/"],
+            "Plugins\\ReceiptFE\\": ["plugins/receiptFE/custom/src/", "plugins/receiptFE/src/"],
+            "Plugins\\DichiarazioniIntento\\": ["plugins/dichiarazioni_intento/custom/src/", "plugins/dichiarazioni_intento/src/"],
+            "Plugins\\PianificazioneInterventi\\": ["plugins/pianificazione_interventi/custom/src/", "plugins/pianificazione_interventi/src/"],
+            "Plugins\\PianificazioneFatturazione\\": ["plugins/pianificazione_fatturazione/custom/src/", "plugins/pianificazione_fatturazione/src/"],
+            "Plugins\\StatisticheArticoli\\": ["plugins/statistiche_articoli/custom/src/", "plugins/statistiche_articoli/src/"],
+            "Plugins\\ListinoClienti\\": ["plugins/listino_clienti/custom/src/", "plugins/listino_clienti/src/"],
+            "Plugins\\ListinoFornitori\\": ["plugins/listino_fornitori/custom/src/", "plugins/listino_fornitori/src/"],
+            "Plugins\\ComponentiImpianti\\": ["plugins/componenti/custom/src/", "plugins/componenti/src/"],
+            "Plugins\\PresentazioniBancarie\\": ["plugins/presentazioni_bancarie/custom/src/", "plugins/presentazioni_bancarie/src/"]
+        },
+        "files": [
+            "lib/functions.php",
+            "lib/common.php",
+            "lib/helpers.php",
+            "lib/util.php",
+            "lib/deprecated.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": []
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "apcu-autoloader": true,
+        "minimum-stability": "dev",
+        "prefer-stable": true,
+        "platform-check": false,
+        "platform": {
+            "php": "8.3.7"
+        },
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
+    },
+    "scripts": {
+        "unit-tests": "phpunit --configuration phpunit.xml",
+        "format": "php-cs-fixer fix",
+        "setup": [
+            "composer install",
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate",
+            "@php artisan migrate --force",
+            "npm install",
+            "npm run build"
+        ],
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'"
+        ],
+        "test": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi",
+            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
+            "@php artisan migrate --graceful --ansi"
+        ],
+        "pre-package-uninstall": [
+            "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+        ]
+    }
+}

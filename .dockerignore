@@ -1,0 +1,18 @@
+.git
+.github
+.vscode
+node_modules
+vendor
+assets/dist
+backup/*
+!backup/.htaccess
+files/*
+!files/temp/
+!files/temp/.gitkeep
+logs/*
+!logs/.htaccess
+*.zip
+*.log
+.env
+php.ini
+# docker (rimosso per permettere COPY docker/php.ini)

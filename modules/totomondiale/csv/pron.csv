@@ -1,0 +1,76 @@
+Girone	Squadra Casa		Squadra Trasferta	Esito Match	Risultato Pronostico		Vincenzo Granata	Nello Granata	Salvatore Diano	Giuseppe Carandente	Filippo Petito	Salvatore Ammendola	Armando Vitiello	Domenico Taglialatela	Vincenzo Vallefuoco	Antonio Coscione	Dario Fonderico	Domenico Granata	Domenico Ronga
+A	Messico	vs	Sud Africa				1	1	1	1	1	1	1	1	1	1	1	1	X
+A	Corea del Sud	vs	Repubblica Ceca				X	X	2	X	X	X	X	X	X	2	1	X	1
+B	Canada	vs	Bosnia				X	1	X	1	1	1	1	2	1	X	2	1	X
+D	Stati Uniti	vs	Paraguay				X	X	1	X	1	1	1	1	1	1	1	1	1
+B	Qatar	vs	Svizzera				2	2	2	2	2	2	2	2	2	2	2	2	2
+C	Brasile	vs	Marocco				X	X	1	1	1	1	1	1	1	X	1	1	X
+C	Haiti	vs	Scozia				2	2	X	2	2	2	2	2	2	2	2	2	2
+D	Australia	vs	Turchia				2	2	X	2	2	2	2	2	2	2	2	X	2
+E	Germania	vs	Curaçao				1	1	1	1	1	1	1	1	1	1	1	1	1
+F	Paesi Bassi	vs	Giappone				1	1	1	1	1	1	X	1	1	1	2	1	X
+E	Costa d'Avorio	vs	Ecuador				1	2	X	X	X	2	1	1	1	2	X	X	2
+F	Svezia	vs	Tunisia				1	1	1	1	1	X	1	1	X	1	1	1	1
+H	Spagna	vs	Capo Verde				X	1	1	1	1	1	1	1	1	1	1	1	1
+G	Belgio	vs	Egitto				1	1	1	1	1	1	1	1	X	1	1	1	1
+H	Arabia Saudita	vs	Uruguay				2	2	2	2	2	2	2	2	X	2	2	2	X
+G	Iran	vs	Nuova Zelanda				1	X	X	1	1	X	1	1	2	1	1	1	1
+I	Francia	vs	Senegal				1	1	1	1	1	1	1	1	1	1	1	1	1
+I	Iraq	vs	Norvegia				2	X	2	2	2	2	2	2	2	2	2	2	2
+J	Argentina	vs	Algeria				1	X	1	1	1	1	1	1	1	1	1	1	1
+J	Austria	vs	Jordan				1	1	1	1	1	1	1	1	1	1	1	1	1
+K	Portogallo	vs	RD Congo				1	1	1	1	1	1	1	1	1	1	1	1	1
+L	Inghilterra	vs	Croazia				1	1	X	1	1	1	1	1	1	1	1	1	X
+L	Ghana	vs	Panama				1	X	1	1	1	1	1	1	1	1	X	1	1
+K	Uzbekistan	vs	Colombia				2	2	2	2	2	2	2	2	2	2	2	2	2
+A	Repubblica Ceca	vs	Sud Africa				1	X	1	1	1	1	1	1	1	X	2	1	1
+B	Svizzera	vs	Bosnia				1	1	X	X	1	X	1	X	X	1	2	1	1
+B	Canada	vs	Qatar				1	1	1	1	1	1	1	1	1	1	2	1	1
+A	Messico	vs	Corea del Sud				X	1	1	X	1	1	X	1	X	1	X	1	1
+D	Stati Uniti	vs	Australia				1	1	1	X	1	1	1	1	1	1	1	1	X
+C	Scozia	vs	Marocco				X	X	X	X	X	2	2	X	X	2	1	2	X
+C	Brasile	vs	Haiti				1	1	1	1	1	1	1	1	1	1	1	1	1
+D	Turchia	vs	Paraguay				1	X	1	X	1	2	1	1	1	1	X	1	1
+F	Paesi Bassi	vs	Svezia				1	1	X	X	X	1	1	1	1	1	X	1	1
+E	Germania	vs	Costa d'Avorio				X	1	1	1	1	1	1	1	1	1	1	1	1
+E	Ecuador	vs	Curaçao				1	1	1	1	1	1	1	1	1	1	X	1	X
+F	Tunisia	vs	Giappone				2	2	1	2	2	2	2	1	2	2	2	2	2
+H	Spagna	vs	Arabia Saudita				1	1	1	1	1	1	1	1	1	1	1	1	1
+G	Belgio	vs	Iran				1	1	1	1	1	1	1	1	1	1	1	1	1
+H	Uruguay	vs	Capo Verde				1	1	1	1	1	1	1	1	1	1	1	1	1
+G	Nuova Zelanda	vs	Egitto				2	2	X	2	2	2	2	X	2	X	X	2	X
+J	Argentina	vs	Austria				1	1	X	1	X	1	1	1	1	1	1	1	1
+I	Norvegia	vs	Senegal				1	2	1	X	1	1	1	X	1	X	1	X	1
+I	Francia	vs	Iraq				1	1	1	1	1	1	1	1	1	1	1	1	1
+J	Jordan	vs	Algeria				2	2	2	2	2	2	2	2	2	2	1	2	2
+K	Portogallo	vs	Uzbekistan				1	1	1	1	1	1	1	1	1	1	1	1	1
+L	Inghilterra	vs	Ghana				1	X	1	1	1	1	1	1	1	1	1	1	1
+L	Panama	vs	Croazia				2	X	2	2	2	2	2	2	2	2	2	2	2
+K	Colombia	vs	RD Congo				1	1	1	1	1	1	1	1	1	1	1	1	1
+B	Svizzera	vs	Canada				1	X	1	X	X	X	X	1	1	1	1	X	X
+B	Bosnia	vs	Qatar				X	1	1	1	1	1	1	1	1	1	1	1	X
+C	Scozia	vs	Brasile				2	2	2	X	X	2	2	2	2	2	2	2	X
+C	Marocco	vs	Haiti				1	1	1	1	1	1	1	1	1	1	X	1	1
+A	Repubblica Ceca	vs	Messico				2	X	X	X	X	2	2	X	X	X	2	2	X
+A	Sud Africa	vs	Corea del Sud				2	2	1	2	X	2	2	2	2	2	1	2	X
+E	Curaçao	vs	Costa d'Avorio				2	2	X	2	2	2	2	2	2	2	2	2	X
+E	Ecuador	vs	Germania				2	X	2	X	2	X	2	2	2	2	2	2	2
+F	Giappone	vs	Svezia				X	1	X	X	2	1	1	2	1	X	1	2	1
+F	Tunisia	vs	Paesi Bassi				2	2	2	2	2	2	2	2	2	2	2	2	2
+D	Turchia	vs	Stati Uniti				X	X	X	1	1	X	X	1	X	1	X	X	X
+D	Paraguay	vs	Australia				1	1	X	1	1	1	1	1	2	X	1	X	1
+I	Norvegia	vs	Francia				X	2	X	X	2	X	X	2	2	2	X	2	X
+I	Senegal	vs	Iraq				X	1	1	1	1	1	1	1	1	1	1	1	1
+H	Uruguay	vs	Spagna				X	1	2	2	2	2	1	X	2	1	2	2	2
+H	Capo Verde	vs	Arabia Saudita				2	2	X	2	2	X	2	2	2	X	2	2	1
+G	Egitto	vs	Iran				1	1	X	1	X	1	1	2	1	X	1	1	X
+G	Nuova Zelanda	vs	Belgio				2	2	2	2	2	2	2	2	2	2	2	2	2
+L	Panama	vs	Inghilterra				2	2	2	2	2	2	2	2	2	2	2	2	2
+L	Croazia	vs	Ghana				X	X	X	1	1	1	1	X	1	1	1	X	1
+K	Colombia	vs	Portogallo				X	X	X	X	X	X	2	2	2	2	2	2	2
+K	RD Congo	vs	Uzbekistan				1	X	X	X	X	X	1	2	X	2	X	1	1
+J	Algeria	vs	Austria				X	2	2	X	2	1	2	2	X	2	X	X	1
+J	Jordan	vs	Argentina				2	2	2	2	2	2	2	2	2	2	2	2	2
+																			
+	Vincitrice del Torneo						Portogallo	Portogallo	Francia	SPAGNA	Inghilterra	Inghilterra	Portogallo	Portogallo	Francia	Inghilterra	PORTOGALLO	FRANCIA	PORTOGALLO
+	Capocannoniere						KANE	KANE	MBAPPE	KANE	KANE	KANE	CRISTIANO RONALDO	CRISTIANO RONALDO	MBAPPE	KANE	HAALAND	MBAPPE	MBAPPE

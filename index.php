@@ -1,0 +1,321 @@
+<?php
+
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.r.l.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+$skip_permissions = true;
+include_once __DIR__.'/core.php';
+
+use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+
+$op = filter('op');
+$token = filter('token');
+
+$microsoft = null;
+$keycloack = null;
+if ($dbo->isConnected()) {
+    try {
+        $microsoft = $dbo->selectOne('zz_oauth2', '*', ['name' => 'Microsoft', 'enabled' => 1, 'is_login' => 1]);
+        $keycloack = $dbo->selectOne('zz_oauth2', '*', ['name' => 'Keycloak', 'enabled' => 1, 'is_login' => 1]);
+    } catch (QueryException $e) {
+    }
+}
+
+// LOGIN
+switch ($op) {
+    case 'login':
+        $username = post('username');
+        $password = $_POST['password'];
+
+        if ($dbo->isConnected() && $dbo->isInstalled() && auth_osm()->attempt($username, $password)) {
+            $_SESSION['keep_alive'] = true;
+
+            if (intval(setting('Inizio periodo calendario'))) {
+                $_SESSION['period_start'] = Carbon::createFromFormat('d/m/Y', setting('Inizio periodo calendario'))->format('Y-m-d');
+            } else {
+                $_SESSION['period_start'] = date('Y').'-01-01';
+            }
+
+            if (intval(setting('Fine periodo calendario'))) {
+                $_SESSION['period_end'] = Carbon::createFromFormat('d/m/Y', setting('Fine periodo calendario'))->format('Y-m-d');
+            } else {
+                $_SESSION['period_end'] = date('Y').'-12-31';
+            }
+
+        // Rimozione log vecchi
+        // $dbo->query('DELETE FROM `zz_operations` WHERE DATE_ADD(`created_at`, INTERVAL 30*24*60*60 SECOND) <= NOW()');
+        } else {
+            $status = auth_osm()->getCurrentStatus();
+
+            // Salva il messaggio di errore in una variabile di sessione separata
+            $_SESSION['login_error'] = AuthOSM::getStatus()[$status]['message'];
+
+            redirect_url(base_path_osm().'/index.php');
+            exit;
+        }
+
+        break;
+
+    case 'logout':
+        AuthOSM::logout();
+        // Pulisce anche l'intended URL al logout
+        AuthOSM::clearIntended();
+
+        redirect_url(base_path_osm().'/index.php');
+        exit;
+}
+
+if (AuthOSM::check() && isset($dbo) && $dbo->isConnected() && $dbo->isInstalled()) {
+    // Priorità 1: Token access (sistema esistente)
+    if (Permissions::isTokenAccess()) {
+        if (!empty($_SESSION['token_access']['id_module_target']) && !empty($_SESSION['token_access']['id_record_target'])) {
+            redirect_url(base_path_osm().'/shared_editor.php?id_module='.$_SESSION['token_access']['id_module_target'].'&id_record='.$_SESSION['token_access']['id_record_target']);
+            exit;
+        }
+    }
+
+    // Priorità 2: Intended URL (nuovo sistema di redirect post-login)
+    if (AuthOSM::hasIntended()) {
+        $intended_url = AuthOSM::getIntended();
+
+        // Verifica i permessi per l'URL intended
+        if (AuthOSM::canAccessIntended()) {
+            AuthOSM::clearIntended();
+            redirect_url($intended_url);
+            exit;
+        }
+        // L'utente non ha i permessi per accedere alla pagina richiesta
+        AuthOSM::clearIntended();
+        flash()->warning(tr('Non hai i permessi necessari per accedere alla pagina richiesta.'));
+    }
+
+    // Priorità 3: Primo modulo (sistema esistente come fallback)
+    $module = AuthOSM::firstModule();
+
+    if (!empty($module)) {
+        redirect_url(base_path_osm().'/controller.php?id_module='.$module);
+    } else {
+        redirect_url(base_path_osm().'/index.php?op=logout');
+    }
+    exit;
+}
+
+// Gestione accesso tramite token OTP
+if (!empty($token) && $dbo->isConnected() && $dbo->isInstalled()) {
+    redirect_url(base_path_osm().'/token_login.php?token='.urlencode($token));
+    exit;
+}
+
+// Modalità manutenzione
+if (!empty($config['maintenance_ip'])) {
+    include_once base_dir().'/include/init/maintenance.php';
+}
+
+// Procedura di installazione
+include_once base_dir().'/include/init/configuration.php';
+
+// Procedura di aggiornamento
+include_once base_dir().'/include/init/update.php';
+
+// Procedura di inizializzazione
+include_once base_dir().'/include/init/init.php';
+
+$pageTitle = (!$dbo->isInstalled() || !$dbo->isConnected()) ? tr('Installazione') : tr('Login');
+
+include_once App::filepath('include|custom|', 'top.php');
+
+// Controllo se è una beta e in caso mostro un warning
+if (Update::isBeta()) {
+    echo '
+			<div class="clearfix"></div>
+            <div class="alert alert-warning alert-dismissible col-md-6 offset-md-3 text-center show">
+                <i class="fa fa-exclamation-triangle"></i> <strong>'.tr('Attenzione!').'</strong> '.tr('Stai utilizzando una versione <b>non stabile</b> di OSM.').'
+                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            </div>';
+}
+
+// Controllo se è una beta e in caso mostro un warning
+if (AuthOSM::isBrute()) {
+    echo '
+    <div class="card card-danger shadow-lg col-md-6 offset-md-3 mt-5" id="brute">
+        <div class="card-header text-center">
+            <h3 class="card-title"><i class="fa fa-exclamation-triangle mr-2"></i>'.tr('Attenzione').'</h3>
+        </div>
+        <div class="card-body text-center">
+            <p class="lead">'.tr('Sono stati effettuati troppi tentativi di accesso consecutivi!').'</p>
+            <div class="alert alert-warning">
+                <p>'.tr('Tempo rimanente').':</p>
+                <h3><span id="brute-timeout" class="badge badge-danger">'.(AuthOSM::getBruteTimeout() + 1).'</span> '.tr('secondi').'</h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        $(".login-box").hide();
+        brute();
+    });
+
+    function brute() {
+        var value = parseFloat($("#brute-timeout").text()) - 1;
+        $("#brute-timeout").text(value);
+
+        if(value > 0){
+            setTimeout(brute, 1000);
+        } else {
+            $("#brute").fadeOut(500, function() {
+                $(".login-box").fadeIn(500);
+            });
+        }
+    }
+    </script>';
+}
+// Recupera il messaggio di errore dalla variabile di sessione
+$error_message = $_SESSION['login_error'] ?? null;
+if (!empty($error_message)) {
+    // Rimuovi il messaggio dalla sessione dopo averlo recuperato
+    unset($_SESSION['login_error']);
+
+    echo '
+            <script>
+            $(document).ready(function(){
+                // Add shake animation to login box
+                $(".login-box").addClass("animated shake");
+
+                // Add error styling to password field
+                $(".password-field").addClass("is-invalid");
+
+                // Add error message under password field
+                $(".password-field-container").append(\'<div class="invalid-feedback d-block"><i class="fa fa-exclamation-circle mr-1"></i>'.addslashes($error_message).'</div>\');
+
+                // Focus on password field
+                $("input[name=password]").focus();
+
+                // Remove error styling when user starts typing in any field
+                $("input[name=password], input[name=username]").on("keydown", function() {
+                    $(".password-field").removeClass("is-invalid");
+                    $(".invalid-feedback").fadeOut(300);
+                });
+            });
+            </script>';
+}
+
+if ($dbo->isInstalled() && $dbo->isConnected() && !Update::isUpdateAvailable()) {
+    echo '
+			<form action="?op=login" method="post" autocomplete="off">
+				<div class="login-box card-center-medium">
+                    <div class="card card-primary shadow-lg">
+                        <div class="card-header text-center bg-light py-4">
+                            <img src="'.App::getPaths()['img'].'/logo_mondiali.webp" alt="'.tr('OpenSTAManager').'" class="img-fluid">
+                        </div>
+
+                        <div class="card-body pt-4">
+                            <p class="login-box-msg text-secondary mb-4"><i class="fa fa-lock mr-2"></i>'.tr('Accedi con le tue credenziali').'</p>
+                            <div class="input-group mb-4">
+                                <input type="text" name="username" autocomplete="username" class="form-control form-control-lg" placeholder="'.tr('Nome utente').'"';
+    if (isset($username)) {
+        echo ' value="'.$username.'"';
+    }
+
+    echo ' required>
+                                <div class="input-group-append">
+                                    <div class="input-group-text after">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 password-field-container">
+                                {[ "type": "password", "name": "password", "autocomplete": "current-password", "placeholder": "'.tr('Password').'", "class": "form-control-lg password-field" ]}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block btn-lg shadow-sm" id="login-button">
+                                <i class="fa fa-sign-in mr-2"></i>'.tr('Accedi').'
+                            </button>
+
+                            <div class="text-center mt-4">
+                                <a href="'.base_path_osm().'/reset.php" class="text-secondary">
+                                    <i class="fa fa-question-circle mr-1"></i>'.tr('Password dimenticata?').'
+                                </a>
+                            </div>';
+    if ($microsoft || $keycloack) {
+        echo '
+                        <div class="social-auth-links text-center mt-4 pt-3 border-top">
+                            <p class="text-muted">'.tr('- oppure -').'</p>';
+                        if ($microsoft) {
+                            echo '
+                            <a href="'.base_path_osm().'/oauth2_login.php?id='.$microsoft['id'].'" class="btn btn-block btn-social btn-primary btn-flat shadow-sm">
+                                <i class="fa fa-windows mr-2"></i>'.tr('Accedi con Microsoft').'
+                            </a>';
+                        }
+                        if ($keycloack) {
+                            echo '
+                            <a href="'.base_path_osm().'/oauth2_login.php?id='.$keycloack['id'].'" class="btn btn-block btn-social btn-info btn-flat shadow-sm">
+                                <i class="fa fa-key mr-2"></i>'.tr('Accedi con Keycloack').'
+                            </a>';
+                        }
+                        echo '
+                        </div>';
+    }
+    echo '
+                        </div>
+                    </div>
+                </div>
+			</form>
+			<!-- /.box -->
+
+            <script>
+            $(document).ready(function(){
+                // Focus on first empty field
+                if($("input[name=username]").val() == ""){
+                    $("input[name=username]").focus();
+                } else {
+                    $("input[name=password]").focus();
+                }
+
+                // Add hover effect to login button
+                $("#login-button").hover(
+                    function() {
+                        $(this).removeClass("shadow-sm").addClass("shadow");
+                    },
+                    function() {
+                        $(this).removeClass("shadow").addClass("shadow-sm");
+                    }
+                );
+
+                // Show loading text on button click
+                $("#login-button").click(function(){
+                    $(this).html(\'<i class="fa fa-circle-o-notch fa-spin mr-2"></i> '.tr('Autenticazione').'...\');
+                });
+
+                // Add subtle animation to input fields on focus
+                $("input").focus(function(){
+                    $(this).parent().animate({marginLeft: "5px"}, 200).animate({marginLeft: "0px"}, 200);
+                });
+            });
+            </script>';
+}
+
+$custom_css = $dbo->isInstalled() ? html_entity_decode(setting('CSS Personalizzato')) : '';
+if (!empty($custom_css)) {
+    echo '
+    <style>'.$custom_css.'</style>';
+}
+
+include_once App::filepath('include|custom|', 'bottom.php');

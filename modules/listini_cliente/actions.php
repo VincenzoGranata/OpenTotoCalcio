@@ -1,0 +1,162 @@
+<?php
+
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.r.l.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+include_once __DIR__.'/../../core.php';
+
+use Modules\Articoli\Articolo as ArticoloOriginale;
+use Modules\ListiniCliente\Articolo;
+use Modules\ListiniCliente\Listino;
+use Modules\ListiniCliente\Articolo as ArticoloListino;
+
+switch (filter('op')) {
+    case 'update':
+        $listino->nome = post('nome');
+        $listino->data_attivazione = post('data_attivazione') ?: null;
+        $listino->data_scadenza_predefinita = post('data_scadenza_predefinita') ?: null;
+        $listino->is_sempre_visibile = post('is_sempre_visibile');
+        $listino->attivo = post('attivo');
+        $listino->note = post('note');
+        $listino->save();
+
+        $id_anagrafiche = (array) post('idanagrafica');
+        $dbo->query('UPDATE `an_anagrafiche` SET id_listino=0 WHERE id_listino='.prepare($id_record));
+        foreach ($id_anagrafiche as $id_anagrafica) {
+            $dbo->query('UPDATE `an_anagrafiche` SET id_listino='.prepare($id_record).' WHERE idanagrafica='.prepare($id_anagrafica));
+        }
+
+        flash()->info(tr('Listino modificato correttamente!'));
+
+        break;
+
+    case 'add':
+        $listino = Listino::build(post('nome'));
+        $listino->data_attivazione = post('data_attivazione') ?: null;
+        $listino->data_scadenza_predefinita = post('data_scadenza_predefinita') ?: null;
+        $listino->is_sempre_visibile = post('is_sempre_visibile');
+        $listino->attivo = post('attivo');
+        $listino->note = post('note');
+        $listino->save();
+
+        $id_record = $listino->id;
+
+        flash()->info(tr('Nuovo listino aggiunto!'));
+
+        break;
+
+    case 'manage_articolo':
+        if (empty(post('id'))) {
+            $articolo_originale = ArticoloOriginale::find(post('id_articolo'));
+
+            $articolo_listino = Articolo::build($articolo_originale, $id_record);
+            $articolo_listino->data_scadenza = post('data_scadenza') ?: null;
+            $articolo_listino->setPrezzoUnitario(post('prezzo_unitario_fisso'));
+            $articolo_listino->sconto_percentuale = post('sconto_percentuale');
+            $articolo_listino->save();
+        } else {
+            $articolo_listino = Articolo::find(post('id'));
+            $articolo_listino->data_scadenza = post('data_scadenza') ?: null;
+            $articolo_listino->setPrezzoUnitario(post('prezzo_unitario_fisso'));
+            $articolo_listino->sconto_percentuale = post('sconto_percentuale');
+            $articolo_listino->save();
+        }
+
+        // Salvataggio dei dettagli dei prezzi per range
+        $prezzi_unitari = (array) post('prezzo_unitario');
+        $minimi = post('minimo');
+        $massimi = post('massimo');
+        $sconti = (array) post('sconto');
+        $dettagli_registrati = post('dettaglio');
+
+        // Rimozione dei dettagli cancellati
+        $dettagli = Articolo::dettagli($articolo_listino->id);
+        if (!empty($dettagli_registrati)) {
+            $dettagli->whereNotIn('id', $dettagli_registrati)->delete();
+        } else {
+            $dettagli->delete();
+        }
+
+        // Aggiornamento e creazione dei dettagli registrati
+        foreach ($prezzi_unitari as $key => $prezzo_unitario) {
+            // Salta se minimo o massimo non sono definiti (articolo principale senza range)
+            if (!isset($minimi[$key]) || !isset($massimi[$key]) || $minimi[$key] === '' || $massimi[$key] === '') {
+                continue;
+            }
+
+            if (isset($dettagli_registrati[$key])) {
+                $dettaglio = Articolo::find($dettagli_registrati[$key]);
+            } else {
+                $dettaglio = Articolo::build($articolo_listino->articolo, $articolo_listino->id_listino);
+                $dettaglio->data_scadenza = $articolo_listino->data_scadenza;
+                $dettaglio->sconto_percentuale = $articolo_listino->sconto_percentuale;
+            }
+
+            if ($dettaglio->minimo != $minimi[$key] || $dettaglio->massimo != $massimi[$key] || $dettaglio->sconto_percentuale != $sconti[$key] || $dettaglio->prezzo_unitario != $prezzo_unitario) {
+                $dettaglio->minimo = $minimi[$key];
+                $dettaglio->massimo = $massimi[$key];
+                $dettaglio->sconto_percentuale = $sconti[$key];
+                $dettaglio->setPrezzoUnitario($prezzo_unitario);
+                $dettaglio->save();
+            }
+        }
+
+        flash()->info(tr('Nuovo articolo al listino aggiunto!'));
+
+        break;
+
+    case 'copy':
+        $database->beginTransaction();
+        $dbo->query('CREATE TEMPORARY TABLE tmp SELECT * FROM mg_listini WHERE id= '.prepare($id_record));
+        $dbo->query('ALTER TABLE tmp DROP id');
+        $dbo->query('INSERT INTO mg_listini SELECT NULL,tmp. * FROM tmp');
+        $id_record_new = $dbo->lastInsertedID();
+        $dbo->query('DROP TEMPORARY TABLE tmp');
+        $dbo->query('UPDATE mg_listini SET nome = CONCAT (nome, " (copia)") WHERE id = '.prepare($id_record_new));
+
+        $articoli = Articolo::where('id_listino', $id_record)->get();
+        if ($articoli->isNotEmpty()) {
+            $dbo->query('INSERT INTO mg_listini_articoli (SELECT NULL, tmp.* FROM mg_listini_articoli tmp WHERE tmp.id IN ('.implode(',', $articoli->pluck('id')->toArray()).'))');
+            $dbo->query('UPDATE mg_listini_articoli SET id_listino = '.prepare($id_record_new).' WHERE id_listino = '.prepare($id_record));
+        }
+
+        flash()->info(tr('Listino duplicato correttamente!'));
+
+        break;
+
+    case 'delete_articolo':
+        $id_righe = (array) post('id');
+
+        foreach ($id_righe as $id_riga) {
+            $articolo_listino = Articolo::find($id_riga);
+            $articolo_listino->delete();
+        }
+
+        flash()->info(tr('Articoli del listino eliminati correttamente!'));
+
+        break;
+
+    case 'delete':
+        if (!empty($id_record)) {
+            $listino->delete();
+            ArticoloListino::where('id_listino', $id_record)->delete();
+            flash()->info(tr('Listino eliminato correttamente!'));
+        }
+
+        break;
+}

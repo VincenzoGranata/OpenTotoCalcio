@@ -1,0 +1,283 @@
+<?php
+
+/*
+ * OpenSTAManager: il software gestionale open source per l'assistenza tecnica e la fatturazione
+ * Copyright (C) DevCode s.r.l.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+namespace Modules\Interventi;
+
+use Common\Document;
+use Modules\Anagrafiche\Anagrafica;
+use Modules\Contratti\Contratto;
+use Modules\Preventivi\Preventivo;
+use Modules\TipiIntervento\Tipo as TipoSessione;
+use Traits\RecordTrait;
+use Traits\ReferenceTrait;
+use Util\Generator;
+
+class Intervento extends Document
+{
+    use ReferenceTrait;
+    use RecordTrait;
+
+    protected $table = 'in_interventi';
+
+    protected $info = [];
+
+    protected $casts = [
+        'data_richiesta' => 'date',
+        'data_scadenza' => 'date',
+    ];
+
+    protected static $translated_fields = [];
+
+    /**
+     * Crea un nuovo intervento.
+     *
+     * @param string $data_richiesta
+     *
+     * @return self
+     */
+    public static function build(Anagrafica $anagrafica, TipoSessione $tipo_sessione, Stato $stato, $data_richiesta, $id_segment = null)
+    {
+        $model = new static();
+
+        $id_segment = $id_segment ?: getSegmentPredefined($model->getModule()->id);
+
+        $model->anagrafica()->associate($anagrafica);
+        $model->stato()->associate($stato);
+        $model->tipo()->associate($tipo_sessione);
+
+        $model->codice = static::getNextCodice($data_richiesta, $id_segment);
+        $model->data_richiesta = $data_richiesta;
+        $model->id_segment = $id_segment;
+        $model->idagente = $anagrafica->idagente;
+        $model->idpagamento = $anagrafica->idpagamento_vendite ?: setting('Tipo di pagamento predefinito');
+
+        // Set idclientefinale to the same as idanagrafica by default to avoid foreign key constraint violation
+        $model->idclientefinale = $anagrafica->idanagrafica;
+
+        $user = auth_osm()->getUser();
+        // Imposto, come sede aziendale, la sede legale (0) se disponibile, altrimenti la prima sede disponibile
+        $model->idsede_partenza = (!empty($user->sedi) && in_array(0, $user->sedi)) ? 0 : (!empty($user->sedi) ? $user->sedi[0] : 0);
+        $model->save();
+
+        return $model;
+    }
+
+    public function getOreTotaliAttribute()
+    {
+        if (!isset($this->info['ore_totali'])) {
+            $sessioni = $this->sessioni;
+
+            $this->info['ore_totali'] = $sessioni->sum('ore');
+        }
+
+        return $this->info['ore_totali'];
+    }
+
+    public function getOreTotaliDaConteggiareAttribute()
+    {
+        if (!isset($this->info['ore_totali_da_conteggiare'])) {
+            $sessioni = $this->sessioni()->leftJoin('in_tipiintervento', 'in_interventi_tecnici.idtipointervento', 'in_tipiintervento.id')->where('non_conteggiare', 0);
+
+            $this->info['ore_totali_da_conteggiare'] = $sessioni->sum('ore');
+        }
+
+        return $this->info['ore_totali_da_conteggiare'];
+    }
+
+    public function getKmTotaliAttribute()
+    {
+        if (!isset($this->info['km_totali'])) {
+            $this->info['km_totali'] = $this->sessioni()->sum('km');
+        }
+
+        return $this->info['km_totali'];
+    }
+
+    public function getInizioAttribute()
+    {
+        if (!isset($this->info['inizio'])) {
+            $this->info['inizio'] = $this->sessioni()->min('orario_inizio');
+        }
+
+        return $this->info['inizio'] ?? $this->data_richiesta;
+    }
+
+    public function getFineAttribute()
+    {
+        if (!isset($this->info['fine'])) {
+            $this->info['fine'] = $this->sessioni()->max('orario_fine');
+        }
+
+        return $this->info['fine'] ?? $this->data_richiesta;
+    }
+
+    public function getModuleAttribute()
+    {
+        return 'Interventi';
+    }
+
+    public function getDirezioneAttribute()
+    {
+        return 'entrata';
+    }
+
+    /**
+     * Restituisce la collezione di righe e articoli con valori rilevanti per i conti.
+     *
+     * @return iterable
+     */
+    public function getRigheContabili()
+    {
+        $results = parent::getRigheContabili();
+
+        return $this->mergeCollections($results, $this->sessioni);
+    }
+
+    // Relazioni Eloquent
+
+    public function anagrafica()
+    {
+        return $this->belongsTo(Anagrafica::class, 'idanagrafica');
+    }
+
+    public function preventivo()
+    {
+        return $this->belongsTo(Preventivo::class, 'id_preventivo');
+    }
+
+    public function contratto()
+    {
+        return $this->belongsTo(Contratto::class, 'id_contratto');
+    }
+
+    public function stato()
+    {
+        return $this->belongsTo(Stato::class, 'idstatointervento');
+    }
+
+    public function tipo()
+    {
+        return $this->belongsTo(TipoSessione::class, 'idtipointervento');
+    }
+
+    public function articoli()
+    {
+        return $this->hasMany(Components\Articolo::class, 'idintervento');
+    }
+
+    public function righe()
+    {
+        return $this->hasMany(Components\Riga::class, 'idintervento');
+    }
+
+    public function sconti()
+    {
+        return $this->hasMany(Components\Sconto::class, 'idintervento');
+    }
+
+    public function descrizioni()
+    {
+        return $this->hasMany(Components\Descrizione::class, 'idintervento');
+    }
+
+    public function sessioni()
+    {
+        return $this->hasMany(Components\Sessione::class, 'idintervento');
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+
+        $result = array_merge($array, [
+            'ore_totali' => $this->ore_totali,
+            'ore_totali_da_conteggiare' => $this->ore_totali_da_conteggiare,
+            'km_totali' => $this->km_totali,
+        ]);
+
+        return $result;
+    }
+
+    // Metodi statici
+
+    /**
+     * Calcola il nuovo codice di intervento.
+     *
+     * @param string $data
+     *
+     * @return string
+     */
+    public static function getNextCodice($data, $id_segment)
+    {
+        return getNextNumeroProgressivo('in_interventi', 'codice', $data, $id_segment, [
+            'data_field' => 'data_richiesta',
+        ]);
+    }
+
+    // Opzioni di riferimento
+
+    public function getReferenceName()
+    {
+        return 'Attività';
+    }
+
+    public function getReferenceNumber()
+    {
+        return $this->codice;
+    }
+
+    public function getReferenceSecondaryNumber()
+    {
+        return null;
+    }
+
+    public function getReferenceDate()
+    {
+        return $this->fine;
+    }
+
+    public function getReferenceRagioneSociale()
+    {
+        return $this->anagrafica->ragione_sociale;
+    }
+
+    public static function getTranslatedFields()
+    {
+        return self::$translated_fields;
+    }
+
+    public function getSignatureAttribute()
+    {
+        $module = $this->getModule();
+        $uploads = $module->files($this->id, true);
+        $image = null;
+
+        // Cerca il primo file con key che inizia con 'signature_'
+        foreach ($uploads as $upload) {
+            if ($upload->key == 'signature') {
+                $directory = '/files/'.$module->attachments_directory.'/';
+                $image = $directory.$upload->filename;
+                break;
+            }
+        }
+
+        return $image ? base_path_osm().$image : null;
+    }
+}
