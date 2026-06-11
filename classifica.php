@@ -59,7 +59,9 @@ foreach ($partecipanti as $p) {
     elseif ($pos === 2) $med = '<span class="med silver">2</span>';
     elseif ($pos === 3) $med = '<span class="med bronze">3</span>';
     else $med = '<span class="med neu">'.$pos.'</span>';
-    $lr .= "<tr><td class=\"tc\">$med</td><td><strong>".e($p->nome)."</strong></td><td class=\"tc\">".(int)$p->punti_partite."</td><td class=\"tc\">".(int)$p->punti_bonus."</td><td class=\"tc\"><strong style=\"font-size:20px\">".(int)$p->totale."</strong></td></tr>\n";
+    $v = isset($bonusMap['vincente'][$p->id]) ? traduciSquadra($bonusMap['vincente'][$p->id]->valore) : '-';
+    $c = isset($bonusMap['capocannoniere'][$p->id]) ? $bonusMap['capocannoniere'][$p->id]->valore : '-';
+    $lr .= "<tr><td class=\"tc\">$med</td><td><strong>".e($p->nome)."</strong></td><td class=\"tc\">".(int)$p->punti_partite."</td><td class=\"tc\">".(int)$p->punti_bonus."</td><td class=\"tc\"><strong style=\"font-size:20px\">".(int)$p->totale."</strong></td><td class=\"tc\" style=\"font-size:0.75rem\">".e($v)."</td><td class=\"tc\" style=\"font-size:0.75rem\">".e($c)."</td></tr>\n";
     ++$pos;
 }
 
@@ -123,6 +125,22 @@ foreach ($gruppi as $girone => $matches) {
     $tg .= "</tr></tbody></table></div></div>\n";
 }
 
+$aggiornaToken = urlencode($aggiorna_token ?? 'toto2026');
+$alertHtml = '';
+if (!empty($_GET['aggiornato'])) {
+    $partite = (int)($_GET['partite'] ?? 0);
+    $punteggi = (int)($_GET['punteggi'] ?? 0);
+    $alertHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size:0.85rem;margin-bottom:1rem">
+        <i class="fas fa-check-circle"></i> Risultati aggiornati: <strong>' . $partite . '</strong> partite. Punti ricalcolati per <strong>' . $punteggi . '</strong> pronostici.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>';
+} elseif (!empty($_GET['error'])) {
+    $alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="font-size:0.85rem;margin-bottom:1rem">
+        <i class="fas fa-exclamation-triangle"></i> ' . e($_GET['error']) . '
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>';
+}
+
 echo '<!DOCTYPE html>
 <html lang="it">
 <head>
@@ -164,6 +182,9 @@ body{background:#f5f6fa;min-height:100vh;padding-bottom:80px;font-family:-apple-
 .ft{color:#999;font-size:.72rem;text-align:center;padding:1.2rem 0 0}
 .rf{position:fixed;bottom:20px;right:20px;background:#e94560;color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:20px;box-shadow:0 4px 15px rgba(233,69,96,.4);cursor:pointer;transition:all .3s;z-index:1000}
 .rf:hover{transform:rotate(180deg);background:#ff6b81}
+.ub{position:fixed;bottom:20px;right:80px;background:#4caf50;color:#fff;border:none;border-radius:50%;width:48px;height:48px;font-size:20px;box-shadow:0 4px 15px rgba(76,175,80,.4);cursor:pointer;transition:all .3s;z-index:1000}
+.ub:hover{transform:scale(1.1);background:#66bb6a}
+.ub:disabled{opacity:.5;cursor:wait}
 .tc{text-align:center}
 .tr{text-align:right}
 .fw-bold{font-weight:700}
@@ -178,6 +199,7 @@ body{background:#f5f6fa;min-height:100vh;padding-bottom:80px;font-family:-apple-
 </head>
 <body>
 <div class="container py-3">
+' . $alertHtml . '
 <div class="cd">
 <div class="ch ch1 text-center" onclick="toggleClassifica()" style="cursor:pointer;user-select:none">
     <div class="d-flex justify-content-between align-items-center">
@@ -189,7 +211,7 @@ body{background:#f5f6fa;min-height:100vh;padding-bottom:80px;font-family:-apple-
 <div id="body-classifica">
 <div class="cb p0" style="overflow-x:auto">
 <table class="tb tb-striped mb0" style="min-width:450px">
-<thead><tr><th class="tc" style="width:45px">#</th><th>Partecipante</th><th class="tc">Partite</th><th class="tc">Bonus</th><th class="tc" style="width:70px">Totale</th></tr></thead>
+<thead><tr><th class="tc" style="width:45px">#</th><th>Partecipante</th><th class="tc">Partite</th><th class="tc">Bonus</th><th class="tc" style="width:70px">Totale</th><th class="tc" style="width:100px">Vincitore</th><th class="tc" style="width:110px">Capocannoniere</th></tr></thead>
 <tbody>'.$lr.'</tbody></table></div></div></div>
 
 <div class="lg mt3"><div class="row text-center align-items-center g-2">
@@ -248,7 +270,12 @@ body{background:#f5f6fa;min-height:100vh;padding-bottom:80px;font-family:-apple-
     </ol>
 
     <h5 style="color:#e94560;margin-top:15px">5. Suddivisione del Montepremi</h5>
-    <p>Il montepremi totale verrà suddiviso in base al numero di partecipanti.</p>
+    <p>Il montepremi totale è di <strong>650€</strong> così suddiviso:</p>
+    <ul>
+        <li><strong>1° classificato:</strong> 450€</li>
+        <li><strong>2° classificato:</strong> 200€</li>
+    </ul>
+    <p>Se primo e secondo arrivano a pari punti in classifica, il montepremi totale verrà diviso in parti uguali tra i due.</p>
 </div>
 </div>
 
@@ -260,6 +287,7 @@ body{background:#f5f6fa;min-height:100vh;padding-bottom:80px;font-family:-apple-
 </div>
 </div>
 <button class="rf" onclick="location.reload()" title="Aggiorna"><i class="fas fa-sync-alt"></i></button>
+<button class="ub" onclick="aggiornaRisultati()" title="Aggiorna risultati da worldcup26.ir"><i class="fas fa-cloud-sun"></i></button>
 <script>
 function toggleClassifica() {
     var el = document.getElementById(\'body-classifica\');
@@ -311,6 +339,28 @@ function implodiTutto() {
         document.getElementById(\'tg_\' + g).innerHTML = \'<i class="fas fa-chevron-down"></i>\';
     }
 }
-setTimeout(function(){location.reload()},30000)</script>
+function aggiornaRisultati() {
+    var btn = document.querySelector(\'.ub\');
+    btn.disabled = true;
+    btn.innerHTML = \'<i class="fas fa-spinner fa-pulse"></i>\';
+    fetch(\'aggiorna.php?token=' . $aggiornaToken . '\')
+        .then(function() { location.reload(); })
+        .catch(function() { location.reload(); });
+}
+function aggiornaSilenzioso() {
+    var pos = window.scrollY;
+    fetch(window.location.href).then(function(r) { return r.text(); }).then(function(html) {
+        var nuovo = document.createElement(\'div\');
+        nuovo.innerHTML = html;
+        var nuovoBody = nuovo.querySelector(\'body\');
+        if (nuovoBody) {
+            document.body.innerHTML = nuovoBody.innerHTML;
+            window.scrollTo(0, pos);
+        }
+    }).catch(function() {
+        location.reload();
+    });
+}
+setTimeout(function(){ aggiornaSilenzioso(); }, 30000)</script>
 </body>
 </html>';

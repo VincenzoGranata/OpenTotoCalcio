@@ -13,7 +13,24 @@ Route::get('/login-redirect', function (Request $request) {
     }
 })->name('login');
 
-Route::get('/classifica', function () {
+Route::get('/classifica', function (Request $request) {
+    $aggiornaToken = urlencode('toto2026');
+
+    $alertHtml = '';
+    if ($request->has('aggiornato')) {
+        $partite = (int)$request->input('partite', 0);
+        $punteggi = (int)$request->input('punteggi', 0);
+        $alertHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert" style="font-size:0.85rem;margin-bottom:1rem">
+            <i class="fas fa-check-circle"></i> Risultati aggiornati: <strong>' . $partite . '</strong> partite. Punti ricalcolati per <strong>' . $punteggi . '</strong> pronostici.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    } elseif ($request->has('error')) {
+        $alertHtml = '<div class="alert alert-danger alert-dismissible fade show" role="alert" style="font-size:0.85rem;margin-bottom:1rem">
+            <i class="fas fa-exclamation-triangle"></i> ' . e($request->input('error')) . '
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+
     $partecipanti = DB::select('
         SELECT
             p.id, p.nome,
@@ -61,7 +78,9 @@ Route::get('/classifica', function () {
         elseif ($pos === 2) $med = '<span class="med silver">2</span>';
         elseif ($pos === 3) $med = '<span class="med bronze">3</span>';
         else $med = '<span class="med neutral">'.$pos.'</span>';
-        $leaderboardRows .= "<tr><td class=\"text-center\">$med</td><td><strong>".e($p->nome)."</strong></td><td class=\"text-center\">".(int)$p->punti_partite."</td><td class=\"text-center\">".(int)$p->punti_bonus."</td><td class=\"text-center\"><strong style=\"font-size:20px\">".(int)$p->totale."</strong></td></tr>\n";
+        $v = isset($bonusMap['vincente'][$p->id]) ? traduciSquadra($bonusMap['vincente'][$p->id]->valore) : '-';
+        $c = isset($bonusMap['capocannoniere'][$p->id]) ? $bonusMap['capocannoniere'][$p->id]->valore : '-';
+        $leaderboardRows .= "<tr><td class=\"text-center\">$med</td><td><strong>".e($p->nome)."</strong></td><td class=\"text-center\">".(int)$p->punti_partite."</td><td class=\"text-center\">".(int)$p->punti_bonus."</td><td class=\"text-center\"><strong style=\"font-size:20px\">".(int)$p->totale."</strong></td><td class=\"text-center\" style=\"font-size:0.75rem\">".e($v)."</td><td class=\"text-center\" style=\"font-size:0.75rem\">".e($c)."</td></tr>\n";
         ++$pos;
     }
 
@@ -179,6 +198,9 @@ Route::get('/classifica', function () {
         .footer { color: #666; font-size: 0.75rem; text-align: center; padding: 1.5rem 0 0; }
         .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: #e94560; color: #fff; border: none; border-radius: 50%; width: 52px; height: 52px; font-size: 22px; box-shadow: 0 4px 15px rgba(233,69,96,0.4); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; z-index: 1000; }
         .refresh-btn:hover { transform: rotate(180deg); background: #ff6b81; }
+        .update-btn { position: fixed; bottom: 20px; right: 80px; background: #28a745; color: #fff; border: none; border-radius: 50%; width: 52px; height: 52px; font-size: 22px; box-shadow: 0 4px 15px rgba(40,167,69,0.4); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .update-btn:hover { transform: scale(1.1); background: #34ce57; }
+        .update-btn:disabled { opacity: 0.5; cursor: wait; }
         .container { max-width: 100%; padding: 12px; }
         @media (max-width: 768px) {
             .card-header h1 { font-size: 1rem; }
@@ -191,6 +213,7 @@ Route::get('/classifica', function () {
 </head>
 <body>
     <div class="container py-3">
+        ' . $alertHtml . '
         <div class="card" id="card-classifica">
             <div class="card-header text-center" onclick="toggleClassifica()" style="cursor:pointer;user-select:none">
                 <div class="d-flex justify-content-between align-items-center">
@@ -202,7 +225,7 @@ Route::get('/classifica', function () {
             <div id="body-classifica">
                 <div class="card-body p-0" style="overflow-x:auto">
                     <table class="table table-striped mb-0" style="min-width:500px">
-                        <thead><tr><th class="text-center" style="width:50px">#</th><th>Partecipante</th><th class="text-center">Partite</th><th class="text-center">Bonus</th><th class="text-center" style="width:80px">Totale</th></tr></thead>
+                        <thead><tr><th class="text-center" style="width:50px">#</th><th>Partecipante</th><th class="text-center">Partite</th><th class="text-center">Bonus</th><th class="text-center" style="width:80px">Totale</th><th class="text-center" style="width:100px">Vincitore</th><th class="text-center" style="width:110px">Capocannoniere</th></tr></thead>
                         <tbody>'.$leaderboardRows.'</tbody>
                     </table>
                 </div>
@@ -266,7 +289,12 @@ Route::get('/classifica', function () {
                 </ol>
 
                 <h5 style="color:#e94560;margin-top:15px">5. Suddivisione del Montepremi</h5>
-                <p>Il montepremi totale verrà suddiviso in base al numero di partecipanti.</p>
+                <p>Il montepremi totale è di <strong>650€</strong> così suddiviso:</p>
+                <ul>
+                    <li><strong>1° classificato:</strong> 450€</li>
+                    <li><strong>2° classificato:</strong> 200€</li>
+                </ul>
+                <p>Se primo e secondo arrivano a pari punti in classifica, il montepremi totale verrà diviso in parti uguali tra i due.</p>
             </div>
         </div>
 
@@ -279,6 +307,7 @@ Route::get('/classifica', function () {
     </div>
 
     <button class="refresh-btn" onclick="location.reload()" title="Aggiorna"><i class="fas fa-sync-alt"></i></button>
+    <button class="update-btn" onclick="aggiornaRisultati()" title="Aggiorna risultati da worldcup26.ir"><i class="fas fa-cloud-sun"></i></button>
     <script>
     function toggleRegolamento() {
         var el = document.getElementById(\'body-regolamento\');
@@ -330,7 +359,30 @@ Route::get('/classifica', function () {
             document.getElementById(\'toggle_\' + g).innerHTML = \'<i class="fas fa-chevron-down"></i>\';
         }
     }
-    setTimeout(function(){ location.reload(); }, 30000);
+    function aggiornaRisultati() {
+        var btn = document.querySelector(\'.update-btn\');
+        btn.disabled = true;
+        btn.innerHTML = \'<i class="fas fa-spinner fa-pulse"></i>\';
+        fetch(\'aggiorna.php?token=' . $aggiornaToken . '\')
+            .then(function() { location.reload(); })
+            .catch(function() { location.reload(); });
+    }
+    function aggiornaSilenzioso() {
+        var pos = window.scrollY;
+        fetch(window.location.href).then(function(r) { return r.text(); }).then(function(html) {
+            var nuovo = document.createElement(\'div\');
+            nuovo.innerHTML = html;
+            var vecchioBody = document.body;
+            var nuovoBody = nuovo.querySelector(\'body\');
+            if (nuovoBody) {
+                vecchioBody.innerHTML = nuovoBody.innerHTML;
+                window.scrollTo(0, pos);
+            }
+        }).catch(function() {
+            location.reload();
+        });
+    }
+    setTimeout(function(){ aggiornaSilenzioso(); }, 30000);
     </script>
 </body>
 </html>';

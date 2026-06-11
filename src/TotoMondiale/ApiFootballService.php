@@ -192,7 +192,10 @@ class ApiFootballService
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_TIMEOUT => 15,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_USERAGENT => 'OpenSTAManager-TotoMondiale/1.0',
             CURLOPT_HTTPHEADER => [
                 'Accept: application/json',
             ],
@@ -200,7 +203,12 @@ class ApiFootballService
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
         curl_close($ch);
+
+        if ($response === false) {
+            throw new \Exception('worldcup26.ir connection error: '.$error);
+        }
 
         if ($httpCode !== 200) {
             throw new \Exception("worldcup26.ir error: HTTP $httpCode");
