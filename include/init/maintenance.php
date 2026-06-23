@@ -27,7 +27,7 @@ if ($config['maintenance_ip'] != $_SERVER['REMOTE_ADDR']) {
     echo '
     <div class="card card-center-large card-warning">
         <div class="card-header with-border text-center">
-            <img src="'.$img.'/logo_mondiali.webp" width="300" alt="'.tr('OSM Logo').'">
+            <img src="'.$img.'/logo_totosport.png" width="300" alt="'.tr('OSM Logo').'">
         </div>
 
         <div class="card-body">

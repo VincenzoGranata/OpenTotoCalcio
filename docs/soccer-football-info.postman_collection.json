@@ -1,0 +1,607 @@
+{
+  "info": {
+    "name": "Soccer Football Info - Serie A",
+    "description": "Collection per Soccer Football Info API (RapidAPI) - focus Serie A.\n\nRegistrazione: https://rapidapi.com/soccerfootball-info-soccerfootball-info-default/api/soccer-football-info\nPiano gratuito: 200 richieste/giorno\nDocumentazione: https://info.soccerfootball.info/\n\nSERIE A:\n- Championship ID: 52df5453a0628c0a\n\nTEAM ID (Serie A):\n- 17c6e56750a7eea6 = AC Milan\n- 7fa8655d0d814586 = Inter\n- b388ebb12029567b = Juventus\n- 77453a9b80f8dd04 = Napoli\n- 83e0048d4c318470 = Lazio\n- da8b42ba39be6d0c = Roma\n- a31003636ed241a6 = Atalanta\n- b198b05053a15112 = Fiorentina\n- 3cd0def28cc39241 = Torino\n- 1b2e6f9815ccc1ab = Udinese\n- d6b516d4becae928 = Sassuolo\n- cf80ccedcca8fcb6 = Genoa\n- bca655262f8d159b = Cagliari\n- b33baf6f22e11727 = Chievo\n- 8f14ef945fe6957e = Pescara\n- 99615bcd33ccc76f = Sampdoria\n- be05d6b126e9bee5 = Empoli\n- f9b948f9ff516a7b = Palermo\n- 17c6e56750a7eea6 = Bologna (da verificare)\n- 4ff5f26c5954b4e = Verona (da verificare)\n- 9e694918a9a8249e = Sassuolo\n\nNOTA: Ottieni l'ID esatto di ogni squadra da /teams/list/ o dalle partite.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "lastUpdated": "2026-06-23"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://soccer-football-info.p.rapidapi.com",
+      "type": "string"
+    },
+    {
+      "key": "rapidapi_key",
+      "value": "5fe695760dmsh2727104a6c1bc4ap1e03c2jsn1f3f8f4ecc98",
+      "type": "string"
+    },
+    {
+      "key": "championship_id",
+      "value": "52df5453a0628c0a",
+      "type": "string"
+    },
+    {
+      "key": "team_id",
+      "value": "17c6e56750a7eea6",
+      "type": "string"
+    },
+    {
+      "key": "player_id",
+      "value": "fab937082b06f828",
+      "type": "string"
+    },
+    {
+      "key": "match_id",
+      "value": "97b186b88f30fd94",
+      "type": "string"
+    },
+    {
+      "key": "language",
+      "value": "it_IT",
+      "type": "string"
+    },
+    {
+      "key": "date",
+      "value": "20260623",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Stato token e piano",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/token/status/",
+              "host": ["{{base_url}}"],
+              "path": ["token", "status", ""]
+            },
+            "description": "Stato del token, piano attuale (BASIC = gratuito)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Campionato (Serie A)",
+      "item": [
+        {
+          "name": "Info Serie A + Classifica",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/championships/view/?i={{championship_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["championships", "view", ""],
+              "query": [
+                {"key": "i", "value": "{{championship_id}}"}
+              ]
+            },
+            "description": "Info Serie A + tutte le stagioni disponibili dal 2017. Contiene anche groups e tabelle classifica (standings) dentro seasons."
+          }
+        },
+        {
+          "name": "Campionati Italiani (pag. 1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/championships/list/?p=1",
+              "host": ["{{base_url}}"],
+              "path": ["championships", "list", ""],
+              "query": [
+                {"key": "p", "value": "1"}
+              ]
+            },
+            "description": "Elenco paginato di tutti i campionati (25 per pagina). Cerca Serie A, Serie B, Coppa Italia, Champions League."
+          }
+        },
+        {
+          "name": "Partite Serie A (tutte)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/by/basic/?c={{championship_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "by", "basic", ""],
+              "query": [
+                {"key": "c", "value": "{{championship_id}}"}
+              ]
+            },
+            "description": "TUTTE le partite di Serie A dal 2017 a oggi (con eventi, statistiche, formazioni). La paginazione parte da p=1. Usa l=it_IT per i nomi in italiano."
+          }
+        },
+        {
+          "name": "Partite Serie A (pag. 2)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/by/basic/?c={{championship_id}}&l={{language}}&p=2",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "by", "basic", ""],
+              "query": [
+                {"key": "c", "value": "{{championship_id}}"},
+                {"key": "l", "value": "{{language}}"},
+                {"key": "p", "value": "2"}
+              ]
+            },
+            "description": "Seconda pagina delle partite Serie A. 25 risultati per pagina."
+          }
+        },
+        {
+          "name": "Partite Serie A (full - con quote)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/by/full/?c={{championship_id}}&l={{language}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "by", "full", ""],
+              "query": [
+                {"key": "c", "value": "{{championship_id}}"},
+                {"key": "l", "value": "{{language}}"}
+              ]
+            },
+            "description": "Partite Serie A con odds/quote incluse."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Partite",
+      "item": [
+        {
+          "name": "Partite per data (oggi)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/day/basic/?d={{date}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "day", "basic", ""],
+              "query": [
+                {"key": "d", "value": "{{date}}"}
+              ]
+            },
+            "description": "Tutte le partite del mondo per una data specifica (formato YYYYMMDD). Filtra per championship_id nella response."
+          }
+        },
+        {
+          "name": "Partite per data con quote",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/day/full/?d={{date}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "day", "full", ""],
+              "query": [
+                {"key": "d", "value": "{{date}}"}
+              ]
+            },
+            "description": "Partite del giorno con odds/quote."
+          }
+        },
+        {
+          "name": "Dettaglio partita (basic)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/view/basic/?i={{match_id}}&l={{language}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "view", "basic", ""],
+              "query": [
+                {"key": "i", "value": "{{match_id}}"},
+                {"key": "l", "value": "{{language}}"}
+              ]
+            },
+            "description": "Dettaglio completo partita: risultato, eventi (gol, cartellini, sostituzioni, corner), formazioni (titolari + panchina), statistiche (possesso, tiri, xG), arbitro, stadio."
+          }
+        },
+        {
+          "name": "Dettaglio partita (full - con quote)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/view/full/?i={{match_id}}&l={{language}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "view", "full", ""],
+              "query": [
+                {"key": "i", "value": "{{match_id}}"},
+                {"key": "l", "value": "{{language}}"}
+              ]
+            },
+            "description": "Dettaglio partita completo con odds/quote live progressive."
+          }
+        },
+        {
+          "name": "Quote partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/odds/?i={{match_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "odds", ""],
+              "query": [
+                {"key": "i", "value": "{{match_id}}"}
+              ]
+            },
+            "description": "Solo le quote: 1X2, over/under, asian handicap, asian corner da bet365 e Unibet."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Squadre",
+      "item": [
+        {
+          "name": "Dettaglio squadra + Rosa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/view/?i={{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "view", ""],
+              "query": [
+                {"key": "i", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Info squadra: nome, paese, allenatore, stadio (nome, città, capienza, coordinate), ultime 5 partite con risultati, ultimo undici (starting XI + panchina con numeri di maglia)."
+          }
+        },
+        {
+          "name": "Elenco squadre",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/list/?p=1",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "list", ""],
+              "query": [
+                {"key": "p", "value": "1"}
+              ]
+            },
+            "description": "Elenco paginato di tutte le squadre (25 per pagina) con ID, nome, paese, has_image."
+          }
+        },
+        {
+          "name": "Storico partite squadra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/history/?i={{team_id}}&r=1y",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "history", ""],
+              "query": [
+                {"key": "i", "value": "{{team_id}}"},
+                {"key": "r", "value": "1y"}
+              ]
+            },
+            "description": "Tutte le partite di una squadra in un intervallo di tempo. r=all (dal 2017), r=1y (ultimo anno), r=6m (ultimi 6 mesi)."
+          }
+        },
+        {
+          "name": "Confronto diretto (Head to Head)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/versus/?i=17c6e56750a7eea6&j=7fa8655d0d814586",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "versus", ""],
+              "query": [
+                {"key": "i", "value": "17c6e56750a7eea6"},
+                {"key": "j", "value": "7fa8655d0d814586"}
+              ]
+            },
+            "description": "Storico confronti diretti tra due squadre (es. Milan vs Inter). Cambia i parametri i e j con gli ID squadra."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Giocatori",
+      "item": [
+        {
+          "name": "Dettaglio giocatore",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/view/?i={{player_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "view", ""],
+              "query": [
+                {"key": "i", "value": "{{player_id}}"}
+              ]
+            },
+            "description": "Info giocatore: nome, paese, data di nascita, piede preferito, altezza, ultima squadra, storico trasferimenti."
+          }
+        },
+        {
+          "name": "Elenco giocatori",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/list/?p=1",
+              "host": ["{{base_url}}"],
+              "path": ["players", "list", ""],
+              "query": [
+                {"key": "p", "value": "1"}
+              ]
+            },
+            "description": "Elenco paginato di tutti i giocatori. Usa p per scorrere le pagine."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dirette",
+      "item": [
+        {
+          "name": "Partite in diretta (basic)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/live/basic/",
+              "host": ["{{base_url}}"],
+              "path": ["live", "basic", ""]
+            },
+            "description": "Tutte le partite in corso: ID, timer, status, statistiche in tempo reale."
+          }
+        },
+        {
+          "name": "Partite in diretta (full - con quote)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/live/full/",
+              "host": ["{{base_url}}"],
+              "path": ["live", "full", ""]
+            },
+            "description": "Partite in corso con odds/quote live."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Giocatori (elenco completo)",
+      "item": [
+        {
+          "name": "Lista giocatori",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/list/?p=1",
+              "host": ["{{base_url}}"],
+              "path": ["players", "list", ""],
+              "query": [
+                {"key": "p", "value": "1"}
+              ]
+            },
+            "description": "Elenco paginato di tutti i giocatori (25 per pagina)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Allenatori",
+      "item": [
+        {
+          "name": "Dettaglio allenatore",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/managers/view/?i=5fb962e4c8c8cf87",
+              "host": ["{{base_url}}"],
+              "path": ["managers", "view", ""],
+              "query": [
+                {"key": "i", "value": "5fb962e4c8c8cf87"}
+              ]
+            },
+            "description": "Info allenatore: nome, paese, squadra attuale, squadre passate, ultime 5 partite. ID es: Massimiliano Allegri."
+          }
+        },
+        {
+          "name": "Lista allenatori",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/managers/list/?p=1",
+              "host": ["{{base_url}}"],
+              "path": ["managers", "list", ""],
+              "query": [
+                {"key": "p", "value": "1"}
+              ]
+            },
+            "description": "Elenco paginato di tutti gli allenatori."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Arbitri & Stadi",
+      "item": [
+        {
+          "name": "Dettaglio arbitro",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/referees/view/?i=1c87f407ca7b285b",
+              "host": ["{{base_url}}"],
+              "path": ["referees", "view", ""],
+              "query": [
+                {"key": "i", "value": "1c87f407ca7b285b"}
+              ]
+            },
+            "description": "Info arbitro: nome, paese, ultime 5 partite arbitrate. ID es: Marco Guida."
+          }
+        },
+        {
+          "name": "Dettaglio stadio",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/stadiums/view/?i=4eb8c55634deab70",
+              "host": ["{{base_url}}"],
+              "path": ["stadiums", "view", ""],
+              "query": [
+                {"key": "i", "value": "4eb8c55634deab70"}
+              ]
+            },
+            "description": "Info stadio: nome, città, paese, capienza, coordinate geografiche, ultime 5 partite. ID es: Giuseppe Meazza."
+          }
+        },
+        {
+          "name": "Lista stadi",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/stadiums/list/?p=1",
+              "host": ["{{base_url}}"],
+              "path": ["stadiums", "list", ""],
+              "query": [
+                {"key": "p", "value": "1"}
+              ]
+            },
+            "description": "Elenco paginato di tutti gli stadi con ID, nome, città, paese, capienza, coordinate."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Utility",
+      "item": [
+        {
+          "name": "Paesi disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/countries/list/",
+              "host": ["{{base_url}}"],
+              "path": ["countries", "list", ""]
+            },
+            "description": "Tutti i paesi con conteggio: campionati, squadre, giocatori, allenatori, arbitri, stadi."
+          }
+        },
+        {
+          "name": "Lingue disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "soccer-football-info.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/languages/list/",
+              "host": ["{{base_url}}"],
+              "path": ["languages", "list", ""]
+            },
+            "description": "Tutte le 20 lingue supportate (es. it_IT, en_US, de_DE, fr_FR, es_ES)."
+          }
+        }
+      ]
+    }
+  ]
+}

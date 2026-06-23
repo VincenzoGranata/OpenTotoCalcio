@@ -110,3 +110,18 @@ codeception.yml
 openapi.json
 assets/api
 openapitools.json
+
+# Debug / test files
+update/check_*.sql
+update/debug_*.php
+update/test_*.php
+update/fix_*.sql
+update/set_*.sql
+update/totocalcio_check*.sql
+update/totocalcio_fix_*.sql
+update/totocalcio_settings*.sql
+
+# Temporary files
+session_file
+setup_totosport.bat
+*.old

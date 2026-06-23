@@ -54,10 +54,10 @@ echo '<!DOCTYPE html>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
         <meta name="robots" content="noindex,nofollow">
-        <meta name="description" content="'.tr('OpenSTAManager, il software gestionale open source per assistenza tecnica e fatturazione elettronica.').'">
-        <meta name="author" content="DevCode s.r.l.">
+        <meta name="description" content="'.tr('OpenTotoCalcio - Gestione pronostici e classifiche').'">
+        <meta name="author" content="OpenTotoCalcio">
 
-		<link href="'.$paths['img'].'/logo_mondiali.webp" rel="icon" type="image/webp" />';
+			<link href="'.$paths['img'].'/logo_totosport.png" rel="icon" type="image/png" />';
 
 if (file_exists(base_dir().'/manifest.json')) {
     echo '
@@ -414,7 +414,7 @@ if (AuthOSM::check()) {
             <!-- Loader principale -->
 			<!-- Preloader -->
             <div id="main_loading" class="flex-column justify-content-center align-items-center">
-                <img class="animation__shake" src="'.$rootdir.'/assets/dist/img/logo_mondiali.webp" alt="OSM" height="60" width="60">
+                <img class="animation__shake" src="'.$rootdir.'/assets/dist/img/logo_totosport.png" alt="TotoSport" height="60" width="60">
             </div>
 
             <!-- Loader secondario -->
@@ -507,8 +507,8 @@ if (AuthOSM::check()) {
 
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar '.$theme.' elevation-4">
-                <a href="'.tr('https://www.openstamanager.com').'" class="brand-link" title="'.tr("Il gestionale open source per l'assistenza tecnica e la fatturazione elettronica").'" target="_blank">
-                    <img src="'.App::getPaths()['img'].'/logo_mondiali.webp" class="brand-image" alt="'.tr("Il gestionale open source per l'assistenza tecnica e la fatturazione elettronica").'" id="sidebar-logo">
+                <a href="'.base_path_osm().'/controller.php?id_module=121" class="brand-link" title="'.tr('OpenTotoCalcio').'">
+                    <img src="'.App::getPaths()['img'].'/logo_totosport.png" class="brand-image" alt="'.tr('OpenTotoCalcio').'">
                     <span class="brand-text font-weight-light">&nbsp;</span>
 
                 </a>

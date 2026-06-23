@@ -222,7 +222,7 @@ if ($dbo->isInstalled() && $dbo->isConnected() && !Update::isUpdateAvailable()) 
 				<div class="login-box card-center-medium">
                     <div class="card card-primary shadow-lg">
                         <div class="card-header text-center bg-light py-4">
-                            <img src="'.App::getPaths()['img'].'/logo_mondiali.webp" alt="'.tr('OpenSTAManager').'" class="img-fluid">
+                            <img src="'.App::getPaths()['img'].'/logo_totosport.png" alt="'.tr('TotoSport').'" class="img-fluid">
                         </div>
 
                         <div class="card-body pt-4">

@@ -132,7 +132,7 @@ $img = App::getPaths()['img'];
 echo '
 <div class="card card-center-large shadow-lg" style="max-width: 1200px; margin: 3% auto; border-radius: 8px; border: none; opacity: 0; animation: fadeIn 0.5s forwards;">
     <div class="card-header text-center">
-        <img src="'.$img.'/logo_mondiali.webp" style="max-width: 280px;" alt="'.tr('OSM Logo').'">
+        <img src="'.$img.'/logo_totosport.png" style="max-width: 280px;" alt="'.tr('OSM Logo').'">
     </div>
 
     <div class="card-body" style="padding: 30px;">

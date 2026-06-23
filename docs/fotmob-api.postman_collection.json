@@ -1,0 +1,194 @@
+{
+  "info": {
+    "name": "Fotmob API - Serie A",
+    "description": "Collection per Fotmob API (scraping SSR) - focus Serie A (league ID: 55).\n\nI dati vengono estratti dalla pagina HTML tramite __NEXT_DATA__ (server-side rendering).\nNon serve API key — è scraping della pagina pubblica.\n\nLEAGUE ID:\n- 55 = Serie A\n- 86 = Serie B\n- 87 = LaLiga\n- 54 = Bundesliga\n- 57 = Eredivisie\n- 42 = Champions League\n- 73 = Europa League\n\nTEAM ID (Serie A 2026/27):\n- 8564 = Milan\n- 8636 = Inter\n- 9885 = Juventus\n- 9875 = Napoli\n- 8686 = Roma\n- 8543 = Lazio\n- 8524 = Atalanta\n- 8535 = Fiorentina\n- 9857 = Bologna\n- 9804 = Torino\n- 8600 = Udinese\n- 10233 = Genoa\n- 8529 = Cagliari\n- 9891 = Frosinone\n- 7943 = Sassuolo\n- 10171 = Como\n- 6504 = Monza\n- 9888 = Lecce\n- 10167 = Parma\n- 7881 = Venezia\n\nSTATO PARTITA:\n- scheduled = Programmata\n- ongoing = In corso (con minuto)\n- finished = Terminata\n- cancelled = Cancellata",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "lastUpdated": "2026-06-23"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://www.fotmob.com",
+      "type": "string"
+    },
+    {
+      "key": "league_id",
+      "value": "55",
+      "type": "string"
+    },
+    {
+      "key": "season",
+      "value": "2026-2027",
+      "type": "string"
+    },
+    {
+      "key": "team_id",
+      "value": "8564",
+      "type": "string"
+    },
+    {
+      "key": "match_id",
+      "value": "5749641",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏆 Leghe",
+      "item": [
+        {
+          "name": "Dettaglio lega (stagione corrente)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leagues/{{league_id}}/overview",
+              "host": ["{{base_url}}"],
+              "path": ["leagues", "{{league_id}}", "overview"]
+            },
+            "description": "Pagina principale della lega con classifica, fixture, statistiche, trasferimenti.\nDati estraibili dal JSON embedded: __NEXT_DATA__ → props → pageProps\n\nContiene:\n- details: nome lega, stagione, paese\n- table: classifica\n- fixtures.allMatches: tutte le partite\n- stats: statistiche\n- transfers: trasferimenti\n- overview: riepilogo"
+          }
+        },
+        {
+          "name": "Dettaglio lega (stagione specifica)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/leagues/{{league_id}}/overview/{{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["leagues", "{{league_id}}", "overview", "{{season}}"]
+            },
+            "description": "Stessa pagina ma per una stagione specifica. Esempio: /2026-2027 per la stagione 2026/27."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏟️ Squadre",
+      "item": [
+        {
+          "name": "Dettaglio squadra + rosa",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/{{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "{{team_id}}"]
+            },
+            "description": "Pagina squadra con:\n- Info team (nome, stadio, anno fondazione)\n- Rosa giocatori divisa per reparto\n- Ultimi risultati\n- Prossime partite\n- Statistiche\n\nDati in __NEXT_DATA__ → props → pageProps"
+          }
+        },
+        {
+          "name": "Cerca squadra per nome",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams?search=Milan",
+              "host": ["{{base_url}}"],
+              "path": ["teams"],
+              "query": [
+                {"key": "search", "value": "Milan"}
+              ]
+            },
+            "description": "Cerca squadre per nome. La risposta è JSON con suggestions contenenti id, nome, lega."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚽ Partite",
+      "item": [
+        {
+          "name": "Dettaglio partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/matches/{{match_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "{{match_id}}"]
+            },
+            "description": "Pagina dettaglio partita con:\n- Risultato e minuto\n- Statistiche (possesso, tiri, falli, cartellini)\n- Formazioni\n- Eventi (gol, sostituzioni, ammonizioni)\n- Classifica\n- Timeline"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Giocatori",
+      "item": [
+        {
+          "name": "Profilo giocatore",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/255",
+              "host": ["{{base_url}}"],
+              "path": ["players", "255"]
+            },
+            "description": "Profilo giocatore con statistiche carriera, valori di mercato, infortuni.\n\nID comuni:\n- 255 = Mike Maignan\n- 874 = Lautaro Martinez\n- 630 = Ciro Immobile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Utility",
+      "item": [
+        {
+          "name": "Cerca globale",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/search?term=Milan",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"],
+              "query": [
+                {"key": "term", "value": "Milan"}
+              ]
+            },
+            "description": "Ricerca globale per squadre, giocatori, leghe. Risposta JSON diretta."
+          }
+        }
+      ]
+    }
+  ]
+}

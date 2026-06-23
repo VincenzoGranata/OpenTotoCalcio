@@ -401,7 +401,7 @@ if (empty($creation) && (!file_exists('config.inc.php') || !$valid_config)) {
     echo '
         <div class="card card-center-large shadow-lg config-wizard-container">
             <div class="card-header config-wizard-header">
-                <img src="'.$img.'/logo_mondiali.webp" alt="'.tr('OSM Logo').'">
+                <img src="'.$img.'/logo_totosport.png" alt="'.tr('TotoSport Logo').'">
             </div>
 
             <div class="card-body" id="smartwizard" style="padding: 0;">

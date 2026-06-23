@@ -1,0 +1,533 @@
+{
+  "info": {
+    "name": "Totocalcio - API Collection",
+    "description": "Collection con tutti gli endpoint usati dal sistema Totocalcio Serie A.\n\nContiene:\n- football-data.org (fallback per partite)\n- TheSportsDB (rose giocatori, loghi squadre)\n- football.json (openfootball - partite e risultati)\n- api-football RapidAPI (ricerca giocatori)\n\nRegistrati a:\n- https://www.football-data.org/client/register (gratuita)\n- https://rapidapi.com/api-sports/api/api-football/ (free tier)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "lastUpdated": "2026-06-23"
+  },
+  "variable": [
+    {
+      "key": "fb_data_url",
+      "value": "https://api.football-data.org/v4",
+      "type": "string"
+    },
+    {
+      "key": "fb_data_key",
+      "value": "10d242b899bc42b7a846d242e0b4a138",
+      "type": "string"
+    },
+    {
+      "key": "rapidapi_key",
+      "value": "5fe695760dmsh2727104a6c1bc4ap1e03c2jsn1f3f8f4ecc98",
+      "type": "string"
+    },
+    {
+      "key": "tsdb_url",
+      "value": "https://www.thesportsdb.com/api/v1/json/3",
+      "type": "string"
+    },
+    {
+      "key": "serie_a_id",
+      "value": "4332",
+      "type": "string"
+    },
+    {
+      "key": "team_search",
+      "value": "AC_Milan",
+      "type": "string"
+    },
+    {
+      "key": "team_id",
+      "value": "133667",
+      "type": "string"
+    },
+    {
+      "key": "player_search",
+      "value": "Lautaro",
+      "type": "string"
+    },
+    {
+      "key": "giornata",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "season",
+      "value": "2025-2026",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "{{fb_data_key}}",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "X-Auth-Token",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "📦 football.json (openfootball)",
+      "item": [
+        {
+          "name": "Serie A 2025/26 - tutte le partite",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://raw.githubusercontent.com/openfootball/football.json/master/2025-26/it.1.json",
+              "protocol": "https",
+              "host": ["raw", "githubusercontent", "com"],
+              "path": ["openfootball", "football.json", "master", "2025-26", "it.1.json"]
+            },
+            "description": "Tutte le partite di Serie A 2025/26 con risultati. Gratuito, senza API key. Aggiornato dalla community."
+          }
+        },
+        {
+          "name": "Serie A 2024/25",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://raw.githubusercontent.com/openfootball/football.json/master/2024-25/it.1.json",
+              "protocol": "https",
+              "host": ["raw", "githubusercontent", "com"],
+              "path": ["openfootball", "football.json", "master", "2024-25", "it.1.json"]
+            },
+            "description": "Stagione precedente per dati storici."
+          }
+        },
+        {
+          "name": "Altre leghe - Premier League 2025/26",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://raw.githubusercontent.com/openfootball/football.json/master/2025-26/en.1.json",
+              "protocol": "https",
+              "host": ["raw", "githubusercontent", "com"],
+              "path": ["openfootball", "football.json", "master", "2025-26", "en.1.json"]
+            },
+            "description": "Esempio: Premier League. Codici: en.1 (Premier), de.1 (Bundesliga), es.1 (La Liga), fr.1 (Ligue 1)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏟️ TheSportsDB - Squadre",
+      "item": [
+        {
+          "name": "Cerca squadra per nome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/searchteams.php?t={{team_search}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["searchteams.php"],
+              "query": [
+                {"key": "t", "value": "{{team_search}}"}
+              ]
+            },
+            "description": "Cerca una squadra per nome. Esempi: AC_Milan, Inter_Milan, Juventus_FC, SSC_Napoli, AS_Roma.\n\nRitorna: idTeam, strTeam, strTeamAlternate, strLeague, strBadge, strBanner, strStadium, intFormedYear, strDescription."
+          }
+        },
+        {
+          "name": "Cerca squadra - tutte le Serie A",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/searchteams.php?t=AC_Milan",
+              "host": ["{{tsdb_url}}"],
+              "path": ["searchteams.php"],
+              "query": [
+                {"key": "t", "value": "AC_Milan"}
+              ]
+            },
+            "description": "Cambia il parametro t per ogni squadra:\n- AC_Milan\n- Inter_Milan\n- Juventus_FC\n- SSC_Napoli\n- AS_Roma\n- SS_Lazio\n- Atalanta_BC\n- Fiorentina\n- Bologna_FC_1909\n- Torino_FC\n- Udinese_Calcio\n- Sassuolo_Calcio\n- Genoa_CFC\n- Cagliari_Calcio\n- Parma_Calcio_1913\n- AC_Monza\n- US_Lecce\n- Venezia_FC\n- Frosinone_Calcio\n- Como_1907\n- Hellas_Verona\n- Cremonese"
+          }
+        },
+        {
+          "name": "Dettaglio squadra per ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookupteam.php?id={{team_id}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookupteam.php"],
+              "query": [
+                {"key": "id", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Info dettagliate squadra usando l'ID TheSportsDB.\n\nID Serie A:\n- 133667 = AC Milan\n- 133681 = Inter Milan\n- 133676 = Juventus\n- 133670 = Napoli\n- 133682 = Roma\n- 133668 = Lazio\n- 134782 = Atalanta\n- 133674 = Fiorentina\n- 134781 = Bologna\n- 133687 = Torino\n- 133679 = Udinese\n- 133701 = Sassuolo\n- 133675 = Genoa\n- 134783 = Cagliari\n- 135728 = Parma\n- 134070 = Monza\n- 135727 = Lecce\n- 134786 = Venezia\n- 134784 = Frosinone\n- 134243 = Como"
+          }
+        },
+        {
+          "name": "Stemma squadra (badge)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/searchteams.php?t={{team_search}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["searchteams.php"],
+              "query": [
+                {"key": "t", "value": "{{team_search}}"}
+              ]
+            },
+            "description": "Nel risultato, il badge URL è in strBadge. Esempio:\nhttps://r2.thesportsdb.com/images/media/team/badge/xxxxx.png\n\nUsa searchteams e prendi il campo strBadge dal JSON."
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 TheSportsDB - Giocatori",
+      "item": [
+        {
+          "name": "Rosa completa squadra",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookup_all_players.php?id={{team_id}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookup_all_players.php"],
+              "query": [
+                {"key": "id", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Tutti i giocatori di una squadra.\n\nRitorna: idPlayer, strPlayer, strPosition, strNationality, dateBorn, strNumber, strStatus, strDescription.\n\nLimite free tier: ~10 giocatori per squadra."
+          }
+        },
+        {
+          "name": "Rosa Milan (esempio ID 133667)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookup_all_players.php?id=133667",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookup_all_players.php"],
+              "query": [
+                {"key": "id", "value": "133667"}
+              ]
+            },
+            "description": "Rosa AC Milan con tutti i giocatori disponibili nel free tier."
+          }
+        },
+        {
+          "name": "Rosa Inter (ID 133681)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookup_all_players.php?id=133681",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookup_all_players.php"],
+              "query": [
+                {"key": "id", "value": "133681"}
+              ]
+            },
+            "description": "Rosa Inter Milan."
+          }
+        },
+        {
+          "name": "Rosa Juventus (ID 133676)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookup_all_players.php?id=133676",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookup_all_players.php"],
+              "query": [
+                {"key": "id", "value": "133676"}
+              ]
+            },
+            "description": "Rosa Juventus."
+          }
+        },
+        {
+          "name": "Rosa Napoli (ID 133670)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookup_all_players.php?id=133670",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookup_all_players.php"],
+              "query": [
+                {"key": "id", "value": "133670"}
+              ]
+            },
+            "description": "Rosa Napoli."
+          }
+        },
+        {
+          "name": "Dettaglio giocatore",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookupplayer.php?id=34152573",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookupplayer.php"],
+              "query": [
+                {"key": "id", "value": "34152573"}
+              ]
+            },
+            "description": "Info dettagliate su un giocatore. Ritorna: biografia, data di nascita, nazionalità, posizione, stipendio, social.\n\nEsempio: Adrien Rabiot (id: 34152573) del Milan."
+          }
+        },
+        {
+          "name": "Cerca giocatore per nome",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/searchplayers.php?p={{player_search}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["searchplayers.php"],
+              "query": [
+                {"key": "p", "value": "{{player_search}}"}
+              ]
+            },
+            "description": "Cerca giocatori per nome. Ritorna risultati con strPlayer, strTeam, strPosition, strNationality."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚽ TheSportsDB - Partite e Calendario",
+      "item": [
+        {
+          "name": "Partite per giornata (round)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/eventsround.php?id={{serie_a_id}}&r={{giornata}}&s={{season}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["eventsround.php"],
+              "query": [
+                {"key": "id", "value": "{{serie_a_id}}"},
+                {"key": "r", "value": "{{giornata}}"},
+                {"key": "s", "value": "{{season}}"}
+              ]
+            },
+            "description": "Partite di una specifica giornata di Serie A.\n\nParametri:\n- id = 4332 (Serie A)\n- r = numero giornata (1-38)\n- s = stagione (es. 2025-2026)\n\nRitorna: strEvent, dateEvent, strTime, strHomeTeam, strAwayTeam, intHomeScore, intAwayScore, strThumb, strVideo."
+          }
+        },
+        {
+          "name": "Partite per data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/eventsday.php?d=2025-08-23&s=Soccer",
+              "host": ["{{tsdb_url}}"],
+              "path": ["eventsday.php"],
+              "query": [
+                {"key": "d", "value": "2025-08-23"},
+                {"key": "s", "value": "Soccer"}
+              ]
+            },
+            "description": "Tutte le partite di calcio in una data specifica (formato YYYY-MM-DD)."
+          }
+        },
+        {
+          "name": "Partite ultimi 14 giorni",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/eventsday.php?d=2026-06-10&s=Soccer",
+              "host": ["{{tsdb_url}}"],
+              "path": ["eventsday.php"],
+              "query": [
+                {"key": "d", "value": "2026-06-10"},
+                {"key": "s", "value": "Soccer"}
+              ]
+            },
+            "description": "Partite recenti. Cambia la data per vedere partite passate o future."
+          }
+        },
+        {
+          "name": "Risultati ultimi 7 giorni",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/eventsday.php?d=2026-06-16&s=Soccer",
+              "host": ["{{tsdb_url}}"],
+              "path": ["eventsday.php"],
+              "query": [
+                {"key": "d", "value": "2026-06-16"},
+                {"key": "s", "value": "Soccer"}
+              ]
+            },
+            "description": "Risultati recenti per verificare i punteggi aggiornati."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏆 TheSportsDB - Leghe",
+      "item": [
+        {
+          "name": "Info lega Serie A",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookupleague.php?id={{serie_a_id}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookupleague.php"],
+              "query": [
+                {"key": "id", "value": "{{serie_a_id}}"}
+              ]
+            },
+            "description": "Info complete sulla Serie A: nome, stagione corrente, logo, banner, paese, sito web, social, descrizione."
+          }
+        },
+        {
+          "name": "Tutte le leghe",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/all_leagues.php",
+              "host": ["{{tsdb_url}}"],
+              "path": ["all_leagues.php"]
+            },
+            "description": "Elenco completo di tutte le leghe disponibili in TheSportsDB."
+          }
+        },
+        {
+          "name": "Tutti gli sport",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/allsports.php",
+              "host": ["{{tsdb_url}}"],
+              "path": ["allsports.php"]
+            },
+            "description": "Elenco di tutti gli sport supportati."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📸 TheSportsDB - Media",
+      "item": [
+        {
+          "name": "Immagini squadra",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/searchteams.php?t={{team_search}}",
+              "host": ["{{tsdb_url}}"],
+              "path": ["searchteams.php"],
+              "query": [
+                {"key": "t", "value": "{{team_search}}"}
+              ]
+            },
+            "description": "Nel risultato, campi immagine disponibili:\n- strBadge = stemma squadra (150x150)\n- strLogo = logo squadra\n- strBanner = banner\n- strEquipment = maglia\n- strStadiumThumb = stadio\n- strStadium = nome stadio"
+          }
+        },
+        {
+          "name": "Immagini giocatore",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{tsdb_url}}/lookupplayer.php?id=34152573",
+              "host": ["{{tsdb_url}}"],
+              "path": ["lookupplayer.php"],
+              "query": [
+                {"key": "id", "value": "34152573"}
+              ]
+            },
+            "description": "Campi immagine giocatore:\n- strCutout = ritaglio giocatore\n- strRender = rendering 3D\n- strThumb = miniatura\n- strBanner = banner"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 RapidAPI - Ricerca Giocatori",
+      "item": [
+        {
+          "name": "Cerca giocatore (per nome)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "free-api-live-football-data.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "https://free-api-live-football-data.p.rapidapi.com/football-players-search?search={{player_search}}",
+              "protocol": "https",
+              "host": ["free-api-live-football-data", "p", "rapidapi", "com"],
+              "path": ["football-players-search"],
+              "query": [
+                {"key": "search", "value": "{{player_search}}"}
+              ]
+            },
+            "description": "Cerca giocatori per nome (funziona con la chiave RapidAPI).\n\nRitorna: id, name, teamId, teamName, type (player/coach).\n\nEsempi: Lautaro, Milan, Salah, Vlahovic."
+          }
+        },
+        {
+          "name": "Cerca giocatore - Lautaro Martinez",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "free-api-live-football-data.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "https://free-api-live-football-data.p.rapidapi.com/football-players-search?search=Lautaro",
+              "protocol": "https",
+              "host": ["free-api-live-football-data", "p", "rapidapi", "com"],
+              "path": ["football-players-search"],
+              "query": [
+                {"key": "search", "value": "Lautaro"}
+              ]
+            },
+            "description": "Ricerca giocatori il cui nome contiene 'Lautaro'."
+          }
+        },
+        {
+          "name": "Cerca giocatore - Milan (team filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "free-api-live-football-data.p.rapidapi.com"}
+            ],
+            "url": {
+              "raw": "https://free-api-live-football-data.p.rapidapi.com/football-players-search?search=Milan",
+              "protocol": "https",
+              "host": ["free-api-live-football-data", "p", "rapidapi", "com"],
+              "path": ["football-players-search"],
+              "query": [
+                {"key": "search", "value": "Milan"}
+              ]
+            },
+            "description": "Cerca 'Milan' - ritorna giocatori il cui NOME contiene 'Milan' (non la squadra). Più utile per cercare giocatori specifici."
+          }
+        }
+      ]
+    }
+  ]
+}

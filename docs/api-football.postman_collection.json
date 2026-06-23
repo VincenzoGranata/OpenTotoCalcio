@@ -1,0 +1,1279 @@
+{
+  "info": {
+    "name": "API-Football - Serie A (api-football.com)",
+    "description": "Collection per API-Football v3 via RapidAPI - focus Serie A (league ID: 135).\n\nRegistrati su https://rapidapi.com/api-sports/api/api-football/ (free tier: 100 richieste/giorno).\n\nEndpoint completo su: https://api-football-v1.p.rapidapi.com/v3/\n\nDATI DISPONIBILI:\n- Squadre e rose complete dei giocatori ✅\n- Partite, calendario, risultati, giornate\n- Classifica (TOTAL, HOME, AWAY)\n- Marcatori, assist, cartellini\n- Statistiche partita (possesso, tiri, falli)\n- Formazioni, eventi, sostituzioni\n- Previsioni, odds, quote\n- Storico confronti diretti (head2head)\n\nLEAGUE ID:\n- 135 = Serie A\n- 39 = Premier League\n- 140 = La Liga\n- 78 = Bundesliga\n- 61 = Ligue 1\n- 2 = Champions League\n- 3 = Europa League\n- 1 = World Cup\n\nSTATUS CODES:\n- NS = Non iniziata   | 1H = Primo tempo | HT = Intervallo\n- 2H = Secondo tempo  | ET = Tempi supplementari\n- FT = Finita         | PEN = Rigori\n- PST = Rinviata      | CANC = Cancellata\n- LIVE = In corso     | AWD = Forfait tecnico",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "lastUpdated": "2026-06-23"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api-football-v1.p.rapidapi.com/v3",
+      "type": "string"
+    },
+    {
+      "key": "rapidapi_key",
+      "value": "5fe695760dmsh2727104a6c1bc4ap1e03c2jsn1f3f8f4ecc98",
+      "type": "string"
+    },
+    {
+      "key": "rapidapi_host",
+      "value": "api-football-v1.p.rapidapi.com",
+      "type": "string"
+    },
+    {
+      "key": "league_id",
+      "value": "135",
+      "type": "string"
+    },
+    {
+      "key": "season",
+      "value": "2025",
+      "type": "string"
+    },
+    {
+      "key": "team_id",
+      "value": "489",
+      "type": "string"
+    },
+    {
+      "key": "player_id",
+      "value": "255",
+      "type": "string"
+    },
+    {
+      "key": "fixture_id",
+      "value": "1181442",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "📊 Account & Stato",
+      "item": [
+        {
+          "name": "Stato account & richieste rimanenti",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["status"]
+            },
+            "description": "Mostra il piano corrente, le richieste già usate oggi e il limite giornaliero (100/giorno su free tier)."
+          }
+        },
+        {
+          "name": "Timezone disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/timezone",
+              "host": ["{{base_url}}"],
+              "path": ["timezone"]
+            },
+            "description": "Lista di tutti i fusi orari supportati (es. Europe/Rome)."
+          }
+        },
+        {
+          "name": "Paesi disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/countries",
+              "host": ["{{base_url}}"],
+              "path": ["countries"]
+            },
+            "description": "Tutti i paesi per cui ci sono leghe disponibili."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏆 Leghe",
+      "item": [
+        {
+          "name": "Info Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/leagues?id={{league_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["leagues"],
+              "query": [
+                {"key": "id", "value": "{{league_id}}"}
+              ]
+            },
+            "description": "Info complete sulla Serie A: nome, logo, paese, stagioni disponibili e copertura dati (se events=true, lineups=true, etc.)."
+          }
+        },
+        {
+          "name": "Cerca lega per nome",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/leagues?search=Serie A",
+              "host": ["{{base_url}}"],
+              "path": ["leagues"],
+              "query": [
+                {"key": "search", "value": "Serie A"}
+              ]
+            },
+            "description": "Cerca leghe per nome (min 3 caratteri)."
+          }
+        },
+        {
+          "name": "Stagioni disponibili Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/leagues/seasons",
+              "host": ["{{base_url}}"],
+              "path": ["leagues", "seasons"]
+            },
+            "description": "Anni delle stagioni disponibili (es. 2020, 2021, 2022, 2023, 2024, 2025)."
+          }
+        },
+        {
+          "name": "Stagioni Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/leagues?id={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["leagues"],
+              "query": [
+                {"key": "id", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Info su Serie A per una stagione specifica (es. 2025 per la stagione 2025/26). Cambia season per vedere i dati storici (es. 2024, 2023...)."
+          }
+        },
+        {
+          "name": "Leghe attive correntemente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/leagues?current=true",
+              "host": ["{{base_url}}"],
+              "path": ["leagues"],
+              "query": [
+                {"key": "current", "value": "true"}
+              ]
+            },
+            "description": "Solo le leghe attualmente in corso."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏟️ Squadre",
+      "item": [
+        {
+          "name": "Tutte le squadre di Serie A 2025/26",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Tutte le 20 squadre di Serie A con ID, nome, logo, anno fondazione, stadio (nome, città, capacità)."
+          }
+        },
+        {
+          "name": "Dettaglio squadra per ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams?id={{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams"],
+              "query": [
+                {"key": "id", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Dettaglio di una singola squadra per ID.\n\nID squadre Serie A comuni:\n- 489 = AC Milan\n- 505 = Inter\n- 496 = Juventus\n- 497 = Napoli\n- 497 = Roma\n- 487 = Lazio\n- 499 = Atalanta\n- 494 = Fiorentina\n- 500 = Bologna\n- 503 = Torino\n- 495 = Udinese\n- 488 = Sassuolo\n- 493 = Genoa\n- 490 = Cagliari\n- 504 = Verona\n- 501 = Lecce\n- 498 = Monza\n- 506 = Como\n- 491 = Empoli\n- 502 = Parma"
+          }
+        },
+        {
+          "name": "Statistiche squadra in Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/statistics?league={{league_id}}&season={{season}}&team=489",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "statistics"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"},
+                {"key": "team", "value": "489"}
+              ]
+            },
+            "description": "Statistiche aggregate di una squadra nella lega: goal fatti/subiti, possesso, passaggi, tiri, cartellini, ecc. (Milan ID 489)."
+          }
+        },
+        {
+          "name": "Stagioni di una squadra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams/seasons?team={{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "seasons"],
+              "query": [
+                {"key": "team", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Tutte le stagioni in cui una squadra ha partecipato a competizioni nel database."
+          }
+        },
+        {
+          "name": "Cerca squadra per nome",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/teams?search=Milan",
+              "host": ["{{base_url}}"],
+              "path": ["teams"],
+              "query": [
+                {"key": "search", "value": "Milan"}
+              ]
+            },
+            "description": "Cerca squadre per nome (min 3 caratteri)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Rose & Giocatori",
+      "item": [
+        {
+          "name": "Rosa completa squadra (SQUAD)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/squads?team={{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "squads"],
+              "query": [
+                {"key": "team", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "✅ ROSA COMPLETA di una squadra. Tutti i giocatori con: nome, età, numero maglia, posizione, foto.\n\nEsempi team_id:\n- 489 = Milan\n- 505 = Inter\n- 496 = Juventus\n- 497 = Napoli\n- 487 = Lazio\n- 499 = Atalanta"
+          }
+        },
+        {
+          "name": "Rosa Milan (ID 489)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/squads?team=489",
+              "host": ["{{base_url}}"],
+              "path": ["players", "squads"],
+              "query": [
+                {"key": "team", "value": "489"}
+              ]
+            },
+            "description": "Rosa completa AC Milan 2025/26."
+          }
+        },
+        {
+          "name": "Rosa Inter (ID 505)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/squads?team=505",
+              "host": ["{{base_url}}"],
+              "path": ["players", "squads"],
+              "query": [
+                {"key": "team", "value": "505"}
+              ]
+            },
+            "description": "Rosa completa Inter 2025/26."
+          }
+        },
+        {
+          "name": "Rosa Juventus (ID 496)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/squads?team=496",
+              "host": ["{{base_url}}"],
+              "path": ["players", "squads"],
+              "query": [
+                {"key": "team", "value": "496"}
+              ]
+            },
+            "description": "Rosa completa Juventus 2025/26."
+          }
+        },
+        {
+          "name": "Statistiche giocatore (per stagione/lega)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players?id={{player_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["players"],
+              "query": [
+                {"key": "id", "value": "{{player_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Statistiche complete di un giocatore per stagione: gol, assist, tiri, passaggi, dribbling, minuti giocati, posizione, valutazione.\n\nEsempi ID: 255 (Cristiano Ronaldo), 874 (Lautaro Martinez), 630 (Ciro Immobile)."
+          }
+        },
+        {
+          "name": "Cerca giocatore per nome",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players?search=Lautaro&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["players"],
+              "query": [
+                {"key": "search", "value": "Lautaro"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Cerca giocatori per nome (min 3 caratteri). Esempi: Lautaro, Leao, Vlahovic, Barella, Milan (restituisce tutti col nome che contiene 'Milan')."
+          }
+        },
+        {
+          "name": "Profilo giocatore (senza statistiche)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/profiles?player={{player_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "profiles"],
+              "query": [
+                {"key": "player", "value": "{{player_id}}"}
+              ]
+            },
+            "description": "Solo dati anagrafici del giocatore (no statistiche). Nome, data di nascita, nazionalità, posizione, foto."
+          }
+        },
+        {
+          "name": "Giocatori per squadra (con statistiche)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players?team=489&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["players"],
+              "query": [
+                {"key": "team", "value": "489"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Tutti i giocatori di una squadra con statistiche complete per stagione (Milan ID 489). PAGINATO: usa &page=1 per scorrere."
+          }
+        },
+        {
+          "name": "Carriera giocatore (tutte le squadre)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/teams?player={{player_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "teams"],
+              "query": [
+                {"key": "player", "value": "{{player_id}}"}
+              ]
+            },
+            "description": "Tutte le squadre in cui un giocatore ha militato nella loro carriera (con stagioni)."
+          }
+        },
+        {
+          "name": "Stagioni disponibili per giocatore",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/seasons?player={{player_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "seasons"],
+              "query": [
+                {"key": "player", "value": "{{player_id}}"}
+              ]
+            },
+            "description": "Anni delle stagioni disponibili per un giocatore."
+          }
+        },
+        {
+          "name": "Allenatore squadra (coach)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/coachs?squad=489",
+              "host": ["{{base_url}}"],
+              "path": ["coachs"],
+              "query": [
+                {"key": "squad", "value": "489"}
+              ]
+            },
+            "description": "Info allenatore di una squadra con carriera. Squad often is team ID. Prova anche: coach?team=489&season=2025."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚽ Partite & Calendario",
+      "item": [
+        {
+          "name": "Partite Serie A - stagione corrente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Tutte le partite di Serie A per la stagione 2025/26. Risultati per le partite finite, orari per quelle da giocare."
+          }
+        },
+        {
+          "name": "Partite per giornata",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?league={{league_id}}&season={{season}}&round=Regular Season - 1",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"},
+                {"key": "round", "value": "Regular Season - 1"}
+              ]
+            },
+            "description": "Partite di una specifica giornata. Cambia round da 1 a 38: 'Regular Season - 1', 'Regular Season - 2', ecc."
+          }
+        },
+        {
+          "name": "Elenco giornate disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/rounds?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "rounds"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Elenco di tutte le giornate disponibili (es. 'Regular Season - 1', 'Regular Season - 2', ...). Usa il valore restituito per filtrare /fixtures."
+          }
+        },
+        {
+          "name": "Giornata corrente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/rounds?league={{league_id}}&season={{season}}&current=true",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "rounds"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"},
+                {"key": "current", "value": "true"}
+              ]
+            },
+            "description": "Giornata correntemente in corso o l'ultima giocata."
+          }
+        },
+        {
+          "name": "Partite per data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?date=2025-08-23&league={{league_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "date", "value": "2025-08-23"},
+                {"key": "league", "value": "{{league_id}}"}
+              ]
+            },
+            "description": "Partite di una data specifica (formato YYYY-MM-DD)."
+          }
+        },
+        {
+          "name": "Partite in diretta (LIVE)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?live=all",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "live", "value": "all"}
+              ]
+            },
+            "description": "Tutte le partite in corso in tutte le leghe."
+          }
+        },
+        {
+          "name": "Partite LIVE - Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?live=135-489-505",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "live", "value": "135-489-505"}
+              ]
+            },
+            "description": "Partite in corso filtrate per lega (135) o squadre. Formato: leagueId-teamId-teamId."
+          }
+        },
+        {
+          "name": "Partite non ancora iniziate (NS)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?league={{league_id}}&season={{season}}&status=NS",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"},
+                {"key": "status", "value": "NS"}
+              ]
+            },
+            "description": "Partite non ancora iniziate (future). Usa status=FT per solo partite finite, LIVE per quelle in corso.\n\nSTATUS disponibili: TBD, NS, 1H, HT, 2H, ET, P, FT, AET, PEN, PST, CANC, AWD, WO."
+          }
+        },
+        {
+          "name": "Partite finite (FT) con risultati",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?league={{league_id}}&season={{season}}&status=FT",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"},
+                {"key": "status", "value": "FT"}
+              ]
+            },
+            "description": "Solo partite finite con risultati finali."
+          }
+        },
+        {
+          "name": "Ultime N partite di una squadra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?team=489&last=10",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "team", "value": "489"},
+                {"key": "last", "value": "10"}
+              ]
+            },
+            "description": "Ultime 10 partite di una squadra (Milan ID 489)."
+          }
+        },
+        {
+          "name": "Prossime N partite di una squadra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?team=489&next=5",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "team", "value": "489"},
+                {"key": "next", "value": "5"}
+              ]
+            },
+            "description": "Prossime 5 partite di una squadra (Milan ID 489)."
+          }
+        },
+        {
+          "name": "Dettaglio partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures?id={{fixture_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures"],
+              "query": [
+                {"key": "id", "value": "{{fixture_id}}"}
+              ]
+            },
+            "description": "Dettaglio completo di una partita: risultato, minute, stadio, arbitro, formazioni, gol, status, periodi."
+          }
+        },
+        {
+          "name": "Head to Head (confronto diretto)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/headtohead?h2h=489-505",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "headtohead"],
+              "query": [
+                {"key": "h2h", "value": "489-505"}
+              ]
+            },
+            "description": "Storico confronti diretti tra due squadre. Formato: teamId-teamId. Es. 489-505 = Milan vs Inter."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Statistiche & Eventi Partita",
+      "item": [
+        {
+          "name": "Statistiche partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/statistics?fixture={{fixture_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "statistics"],
+              "query": [
+                {"key": "fixture", "value": "{{fixture_id}}"}
+              ]
+            },
+            "description": "Statistiche partita dettagliate: possesso palla, tiri, tiri in porta, calci d'angolo, falli, cartellini, fuorigioco, parate."
+          }
+        },
+        {
+          "name": "Eventi partita (gol, cartellini, sostituzioni)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/events?fixture={{fixture_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "events"],
+              "query": [
+                {"key": "fixture", "value": "{{fixture_id}}"}
+              ]
+            },
+            "description": "Eventi partita in ordine cronologico: gol, assist, cartellini gialli/rossi, sostituzioni, VAR."
+          }
+        },
+        {
+          "name": "Soli gol della partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/events?fixture={{fixture_id}}&type=Goal",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "events"],
+              "query": [
+                {"key": "fixture", "value": "{{fixture_id}}"},
+                {"key": "type", "value": "Goal"}
+              ]
+            },
+            "description": "Solo gli eventi gol della partita. Altri type: Card, Subst, Var."
+          }
+        },
+        {
+          "name": "Formazioni partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/lineups?fixture={{fixture_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "lineups"],
+              "query": [
+                {"key": "fixture", "value": "{{fixture_id}}"}
+              ]
+            },
+            "description": "Formazioni della partita: titolari, panchina, modulo (es. 4-3-3), formazione schierata con posizioni in campo."
+          }
+        },
+        {
+          "name": "Statistiche giocatori per partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/fixtures/players?fixture={{fixture_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["fixtures", "players"],
+              "query": [
+                {"key": "fixture", "value": "{{fixture_id}}"}
+              ]
+            },
+            "description": "Statistiche individuali di tutti i giocatori per una partita: minuti giocati, gol, assist, tiri, passaggi, dribbling, valutazione."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏆 Classifiche",
+      "item": [
+        {
+          "name": "Classifica Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/standings?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["standings"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Classifica completa Serie A: posizione, punti, partite giocate, vittorie, pareggi, sconfitte, gol fatti/subiti, differenza reti, forma ultime 5, home/away."
+          }
+        },
+        {
+          "name": "Classifica di una squadra specifica",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/standings?team=489&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["standings"],
+              "query": [
+                {"key": "team", "value": "489"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Classifica di una squadra specifica (Milan ID 489) in tutte le competizioni a cui partecipa."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🥇 Statistiche Giocatori (Classifiche)",
+      "item": [
+        {
+          "name": "TOP MARCATORI Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/topscorers?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "topscorers"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Classifica marcatori Serie A: gol totali, assist, tiri, tiri in porta, minuti giocati, rigori segnati, valutazione."
+          }
+        },
+        {
+          "name": "TOP ASSIST Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/topassists?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "topassists"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Classifica assist Serie A."
+          }
+        },
+        {
+          "name": "CARTELLINI GIALLI Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/topyellowcards?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "topyellowcards"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Classifica cartellini gialli Serie A."
+          }
+        },
+        {
+          "name": "CARTELLINI ROSSI Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/players/topredcards?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["players", "topredcards"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Classifica cartellini rossi Serie A."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔮 Previsioni & Pronostici",
+      "item": [
+        {
+          "name": "Previsione partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/predictions?fixture={{fixture_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["predictions"],
+              "query": [
+                {"key": "fixture", "value": "{{fixture_id}}"}
+              ]
+            },
+            "description": "Previsione partita: percentuali vittoria casa, pareggio, vittoria fuori, consigli scommessa, forma squadre, confronto diretto."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔄 Trasferimenti & Trofei",
+      "item": [
+        {
+          "name": "Trasferimenti squadra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/transfers?team={{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["transfers"],
+              "query": [
+                {"key": "team", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Trasferimenti di una squadra: giocatori entrati e usciti con date e squadre coinvolte."
+          }
+        },
+        {
+          "name": "Trasferimenti giocatore",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/transfers?player={{player_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["transfers"],
+              "query": [
+                {"key": "player", "value": "{{player_id}}"}
+              ]
+            },
+            "description": "Storico trasferimenti di un giocatore."
+          }
+        },
+        {
+          "name": "Trofei vinti da giocatore",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/trophies?player={{player_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["trophies"],
+              "query": [
+                {"key": "player", "value": "{{player_id}}"}
+              ]
+            },
+            "description": "Trofei vinti da un giocatore nella sua carriera."
+          }
+        },
+        {
+          "name": "Trofei vinti da allenatore",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/trophies?coach=489",
+              "host": ["{{base_url}}"],
+              "path": ["trophies"],
+              "query": [
+                {"key": "coach", "value": "489"}
+              ]
+            },
+            "description": "Trofei vinti da un allenatore."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🤕 Infortuni & Stadi",
+      "item": [
+        {
+          "name": "Infortunati Serie A",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/injuries?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["injuries"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Giocatori infortunati in Serie A."
+          }
+        },
+        {
+          "name": "Infortunati di una squadra",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/injuries?team={{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["injuries"],
+              "query": [
+                {"key": "team", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Infortunati di una squadra specifica (Milan ID 489)."
+          }
+        },
+        {
+          "name": "Stadi disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/venues",
+              "host": ["{{base_url}}"],
+              "path": ["venues"]
+            },
+            "description": "Lista di tutti gli stadi/venue disponibili."
+          }
+        },
+        {
+          "name": "Cerca stadio per nome",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/venues?search=San Siro",
+              "host": ["{{base_url}}"],
+              "path": ["venues"],
+              "query": [
+                {"key": "search", "value": "San Siro"}
+              ]
+            },
+            "description": "Cerca uno stadio per nome."
+          }
+        },
+        {
+          "name": "Squalificati / Assenti",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/sidelined?team={{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["sidelined"],
+              "query": [
+                {"key": "team", "value": "{{team_id}}"}
+              ]
+            },
+            "description": "Giocatori squalificati o indisponibili per una squadra."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🎲 Quote Scommesse",
+      "item": [
+        {
+          "name": "Quote pre-partita",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/odds?league={{league_id}}&season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["odds"],
+              "query": [
+                {"key": "league", "value": "{{league_id}}"},
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Quote pre-partita per Serie A."
+          }
+        },
+        {
+          "name": "Bookmaker disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/odds/bookmakers",
+              "host": ["{{base_url}}"],
+              "path": ["odds", "bookmakers"]
+            },
+            "description": "Elenco dei bookmaker supportati."
+          }
+        },
+        {
+          "name": "Tipi di scommessa disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "x-rapidapi-key", "value": "{{rapidapi_key}}"},
+              {"key": "x-rapidapi-host", "value": "{{rapidapi_host}}"}
+            ],
+            "url": {
+              "raw": "{{base_url}}/odds/bets",
+              "host": ["{{base_url}}"],
+              "path": ["odds", "bets"]
+            },
+            "description": "Tutti i tipi di scommessa disponibili (1X2, Over/Under, etc.)."
+          }
+        }
+      ]
+    }
+  ]
+}

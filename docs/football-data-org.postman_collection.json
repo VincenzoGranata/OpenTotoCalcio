@@ -1,0 +1,588 @@
+{
+  "info": {
+    "name": "football-data.org - Serie A API",
+    "description": "Collection completa per l'API football-data.org v4 - focus su Serie A (codice: SA).\n\nRegistrati a https://www.football-data.org/client/register per ottenere una API key gratuita.\n\nDocumentazione: https://docs.football-data.org/general/v4/\nRate limit: 10 richieste/minuto (tier gratuito)\n\nLEAGUE CODES (italiani):\n- SA = Serie A (id: 2019)\n- SB = Serie B (id: 2121)\n- CIT = Coppa Italia (id: 2122)\n- ISC = Serie C (id: 2123)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "lastUpdated": "2026-06-23"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.football-data.org/v4",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "10d242b899bc42b7a846d242e0b4a138",
+      "type": "string"
+    },
+    {
+      "key": "league_code",
+      "value": "SA",
+      "type": "string"
+    },
+    {
+      "key": "league_id",
+      "value": "2019",
+      "type": "string"
+    },
+    {
+      "key": "team_id",
+      "value": "98",
+      "type": "string"
+    },
+    {
+      "key": "person_id",
+      "value": "44",
+      "type": "string"
+    },
+    {
+      "key": "match_id",
+      "value": "330299",
+      "type": "string"
+    },
+    {
+      "key": "season",
+      "value": "2025",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "{{api_key}}",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "X-Auth-Token",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🏆 Competizioni",
+      "item": [
+        {
+          "name": "Elenco tutte le competizioni",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions",
+              "host": ["{{base_url}}"],
+              "path": ["competitions"]
+            },
+            "description": "Lista di tutte le competizioni disponibili (senza token mostra tutte, con token mostra solo quelle del tuo tier)"
+          }
+        },
+        {
+          "name": "Dettaglio Serie A",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}"]
+            },
+            "description": "Info complete sulla Serie A: nome, stagione corrente, stagioni passate, logo"
+          }
+        },
+        {
+          "name": "Classifica Serie A (TOTAL)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/standings",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "standings"]
+            },
+            "description": "Classifica completa Serie A (TOTAL + HOME + AWAY). Usa il parametro ?season=2025 per una stagione specifica."
+          }
+        },
+        {
+          "name": "Classifica Serie A - solo HOME",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/standings?season={{season}}&matchday=15",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "standings"],
+              "query": [
+                {"key": "season", "value": "{{season}}"},
+                {"key": "matchday", "value": "15"}
+              ]
+            },
+            "description": "Classifica dopo una specifica giornata. Utile per vedere la situazione a un dato momento."
+          }
+        },
+        {
+          "name": "Squadre Serie A",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/teams",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "teams"]
+            },
+            "description": "Elenco di tutte le squadre partecipanti alla Serie A con nomi, stemmi, colori, stadi"
+          }
+        },
+        {
+          "name": "Partite Serie A (stagione corrente)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/matches",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "matches"]
+            },
+            "description": "Tutte le partite della stagione corrente di Serie A. Filtra con ?matchday=N per una giornata specifica."
+          }
+        },
+        {
+          "name": "Partite Serie A per giornata",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/matches?matchday=1",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "matches"],
+              "query": [
+                {"key": "matchday", "value": "1"}
+              ]
+            },
+            "description": "Partite di una specifica giornata di Serie A. Cambia matchday da 1 a 38."
+          }
+        },
+        {
+          "name": "Partite Serie A per data",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/matches?dateFrom=2025-08-15&dateTo=2025-08-31",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "matches"],
+              "query": [
+                {"key": "dateFrom", "value": "2025-08-15"},
+                {"key": "dateTo", "value": "2025-08-31"}
+              ]
+            },
+            "description": "Partite in un intervallo di date. Utile per il calendario mensile."
+          }
+        },
+        {
+          "name": "Partite Serie A filtrate per stato",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/matches?status=FINISHED",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "matches"],
+              "query": [
+                {"key": "status", "value": "FINISHED"}
+              ]
+            },
+            "description": "Solo partite finite. Altri stati: SCHEDULED, TIMED, IN_PLAY, PAUSED, POSTPONED, CANCELLED, LIVE (pseudo-stato che combina IN_PLAY + PAUSED)"
+          }
+        },
+        {
+          "name": "Marcatori Serie A",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/scorers",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "scorers"]
+            },
+            "description": "Classifica marcatori Serie A con gol, assist e rigori per giocatore."
+          }
+        },
+        {
+          "name": "Marcatori - limit 10",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/{{league_code}}/scorers?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "{{league_code}}", "scorers"],
+              "query": [
+                {"key": "limit", "value": "10"}
+              ]
+            },
+            "description": "Top 10 marcatori. Usa limit per controllare quanti risultati."
+          }
+        },
+        {
+          "name": "Serie B",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/SB",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "SB"]
+            },
+            "description": "Dettaglio Serie B (codice: SB, id: 2121)"
+          }
+        },
+        {
+          "name": "Coppa Italia",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competitions/CIT",
+              "host": ["{{base_url}}"],
+              "path": ["competitions", "CIT"]
+            },
+            "description": "Dettaglio Coppa Italia (codice: CIT, id: 2122)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚽ Partite",
+      "item": [
+        {
+          "name": "Tutte le partite (oggi)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches",
+              "host": ["{{base_url}}"],
+              "path": ["matches"]
+            },
+            "description": "Tutte le partite di oggi per tutte le competizioni. Usa ?date=YYYY-MM-DD per una data specifica o keyword YESTERDAY / TOMORROW."
+          }
+        },
+        {
+          "name": "Partite di ieri",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches?date=YESTERDAY",
+              "host": ["{{base_url}}"],
+              "path": ["matches"],
+              "query": [
+                {"key": "date", "value": "YESTERDAY"}
+              ]
+            },
+            "description": "Risultati di ieri. Supporta keyword: YESTERDAY, TODAY, TOMORROW."
+          }
+        },
+        {
+          "name": "Partite in diretta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches?status=LIVE",
+              "host": ["{{base_url}}"],
+              "path": ["matches"],
+              "query": [
+                {"key": "status", "value": "LIVE"}
+              ]
+            },
+            "description": "Partite in corso (LIVE = IN_PLAY + PAUSED)."
+          }
+        },
+        {
+          "name": "Dettaglio partita",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches/{{match_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "{{match_id}}"]
+            },
+            "description": "Dettaglio completo di una partita: risultato, gol, cartellini, sostituzioni, formazioni, statistiche.\n\nHEADER opzionali per espandere i dati:\n- X-Unfold-Lineups: true\n- X-Unfold-Bookings: true\n- X-Unfold-Subs: true\n- X-Unfold-Goals: true\n\nNOTA: lineups, bookings, subs e statistiche dettagliate sono disponibili SOLO nei tier a pagamento."
+          }
+        },
+        {
+          "name": "Head to Head",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches/{{match_id}}/head2head",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "{{match_id}}", "head2head"]
+            },
+            "description": "Storico confronti diretti tra le due squadre di un match."
+          }
+        },
+        {
+          "name": "Partite per competizioni multiple",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches?competitions=SA,CL",
+              "host": ["{{base_url}}"],
+              "path": ["matches"],
+              "query": [
+                {"key": "competitions", "value": "SA,CL"}
+              ]
+            },
+            "description": "Partite di più competizioni contemporaneamente (es. Serie A + Champions League)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏟️ Squadre",
+      "item": [
+        {
+          "name": "Elenco tutte le squadre",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/teams",
+              "host": ["{{base_url}}"],
+              "path": ["teams"]
+            },
+            "description": "Lista di tutte le squadre disponibili (limitata nel tier gratuito)."
+          }
+        },
+        {
+          "name": "Dettaglio squadra + Rosa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/teams/98",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "98"]
+            },
+            "description": "Dettaglio squadra con rosa completa, allenatore, staff, competizioni correnti.\n\nID squadre Serie A:\n- 98 = AC Milan\n- 108 = Inter\n- 109 = Juventus\n- 113 = Napoli\n- 110 = Lazio\n- 100 = AS Roma\n- 102 = Atalanta\n- 99 = Fiorentina\n- 104 = Cagliari\n- 471 = Sassuolo\n- 586 = Torino\n- 107 = Genoa\n- 103 = Bologna\n- 106 = Udinese\n- 105 = Verona\n- 112 = Parma\n- 591 = Empoli\n- 445 = Como\n- 455 = Venezia\n- 450 = Lecce\n- 452 = Monza\n- 488 = Spezia\n- 454 = Salernitana\n- 115 = Frosinone"
+          }
+        },
+        {
+          "name": "Partite di una squadra",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/teams/98/matches?season={{season}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "98", "matches"],
+              "query": [
+                {"key": "season", "value": "{{season}}"}
+              ]
+            },
+            "description": "Tutte le partite di una squadra nella stagione corrente. Filtri: dateFrom, dateTo, status, venue (HOME|AWAY), limit."
+          }
+        },
+        {
+          "name": "Partite squadra - solo casa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/teams/98/matches?venue=HOME&status=FINISHED",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "98", "matches"],
+              "query": [
+                {"key": "venue", "value": "HOME"},
+                {"key": "status", "value": "FINISHED"}
+              ]
+            },
+            "description": "Partite casalinghe finite di una squadra."
+          }
+        },
+        {
+          "name": "Ricerca per ID squadra",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/teams/{{team_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["teams", "{{team_id}}"]
+            },
+            "description": "Usa la variabile {{team_id}} per cercare squadre diverse. Valori comuni: 98 (Milan), 108 (Inter), 109 (Juventus), 113 (Napoli), 100 (Roma), 110 (Lazio), 102 (Atalanta)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Giocatori (Persons)",
+      "item": [
+        {
+          "name": "Dettaglio giocatore",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/persons/{{person_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["persons", "{{person_id}}"]
+            },
+            "description": "Info dettagliate su un giocatore: nome, data di nascita, nazionalità, posizione, squadra attuale, contratto."
+          }
+        },
+        {
+          "name": "Partite giocatore (ultime 15)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/persons/{{person_id}}/matches",
+              "host": ["{{base_url}}"],
+              "path": ["persons", "{{person_id}}", "matches"]
+            },
+            "description": "Ultime 15 partite del giocatore con statistiche aggregate (gol, minuti, cartellini)."
+          }
+        },
+        {
+          "name": "Partite giocatore - solo gol segnati",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/persons/{{person_id}}/matches?e=GOAL&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["persons", "{{person_id}}", "matches"],
+              "query": [
+                {"key": "e", "value": "GOAL"},
+                {"key": "limit", "value": "5"}
+              ]
+            },
+            "description": "Filtra le partite dove il giocatore ha segnato. e=GOAL | ASSIST | SUB_IN | SUB_OUT."
+          }
+        },
+        {
+          "name": "Partite giocatore - partite dalla panchina",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/persons/{{person_id}}/matches?lineup=BENCH",
+              "host": ["{{base_url}}"],
+              "path": ["persons", "{{person_id}}", "matches"],
+              "query": [
+                {"key": "lineup", "value": "BENCH"}
+              ]
+            },
+            "description": "Partite in cui il giocatore è partito dalla panchina."
+          }
+        },
+        {
+          "name": "Giocatore per ID (es. Cristiano Ronaldo)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/persons/44",
+              "host": ["{{base_url}}"],
+              "path": ["persons", "44"]
+            },
+            "description": "Esempio: Cristiano Ronaldo (id: 44). Altri ID noti: Ciro Immobile (2076), Lautaro Martinez (3220), Lorenzo Insigne (2092)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🌍 Aree Geografiche",
+      "item": [
+        {
+          "name": "Elenco aree",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/areas",
+              "host": ["{{base_url}}"],
+              "path": ["areas"]
+            },
+            "description": "Lista di tutte le aree geografiche (nazioni e continenti)."
+          }
+        },
+        {
+          "name": "Italia (area)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/areas/2114",
+              "host": ["{{base_url}}"],
+              "path": ["areas", "2114"]
+            },
+            "description": "Dettaglio area Italia (id: 2114)."
+          }
+        },
+        {
+          "name": "Filtra aree per ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/areas?areas=2114,2072,2224",
+              "host": ["{{base_url}}"],
+              "path": ["areas"],
+              "query": [
+                {"key": "areas", "value": "2114,2072,2224"}
+              ]
+            },
+            "description": "Filtra aree specifiche: Italia (2114), Inghilterra (2072), Spagna (2224)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Trend",
+      "item": [
+        {
+          "name": "Trend gol segnati / subiti",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/trend/scored/98?limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["trend", "scored", "98"],
+              "query": [
+                {"key": "limit", "value": "5"}
+              ]
+            },
+            "description": "Trend gol segnati per una squadra. Tipi: scored | conceded | yellowCards | redCards | possession | shots."
+          }
+        },
+        {
+          "name": "Trend possesso palla",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/trend/possession/98?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["trend", "possession", "98"],
+              "query": [
+                {"key": "limit", "value": "10"}
+              ]
+            },
+            "description": "Trend possesso palla per una squadra nelle ultime partite."
+          }
+        }
+      ]
+    }
+  ]
+}

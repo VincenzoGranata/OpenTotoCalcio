@@ -103,11 +103,11 @@ COPY --from=frontend-builder /app/assets/dist /var/www/html/assets/dist
 
 # Generate final autoloader using Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-RUN composer dump-autoload --optimize
+RUN composer dump-autoload --optimize --no-scripts
 
 # Permissions for the application
 RUN chown -R www-data:www-data /var/www/html/ \
-    && chmod -R 755 /var/www/html/
+    && chmod -R 755 /var/www/html/files /var/www/html/logs
 
 EXPOSE 80
 

@@ -37,7 +37,7 @@ if (!$creation) {
         "generated" : "true",
         "icons" : [
             {
-                "src": "'.App::getPaths()['img'].'/logo_mondiali.webp",
+                "src": "'.App::getPaths()['img'].'/logo_totosport.png",
                 "type": "image/png",
                 "sizes": "489x91"
             }
