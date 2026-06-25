@@ -9,9 +9,9 @@ services:
       - "8080:80"
     depends_on:
       - db
+      - keycloak
     volumes:
       - .:/var/www/html
-      # Evitiamo che il mount della root sovrascriva le cartelle generate nel container
       - /var/www/html/vendor
       - /var/www/html/assets/dist
       - ./docker/php.ini:/usr/local/etc/php/php.ini:ro
@@ -20,6 +20,8 @@ services:
       - DB_NAME=totosport
       - DB_USER=root
       - DB_PASSWORD=secret
+      - KEYCLOAK_URL=http://keycloak:8080
+      - KEYCLOAK_PUBLIC_URL=http://localhost:8081
     networks:
       - default
 
@@ -39,5 +41,33 @@ services:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1
+    container_name: totosport_keycloak
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8081
+      KC_HOSTNAME_STRICT: false
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://db:3306/totosport_keycloak?useSSL=false&allowPublicKeyRetrieval=true
+      KC_DB_USERNAME: root
+      KC_DB_PASSWORD: secret
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./docker/keycloak:/opt/keycloak/data/import:ro
+    networks:
+      - default
+
 volumes:
   db_data:
+  keycloak_data:

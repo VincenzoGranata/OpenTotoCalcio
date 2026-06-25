@@ -21,7 +21,7 @@ Route::get('/calcio', function () {
         return $stato;
     }
 
-    function checkPronostico($pr, $match, $marcatoriReali) {
+    function checkPronostico($pr, $match) {
         if ($match->stato !== 'finished') return null;
         if ($pr->tipo === '1x2') {
             $gc = $match->goal_casa;
@@ -35,13 +35,6 @@ Route::get('/calcio', function () {
             $go = $match->goal_ospite;
             if ($gc === null || $go === null) return null;
             return $pr->pronostico === ($gc . '-' . $go);
-        }
-        if ($pr->tipo === 'marcatore') {
-            $marcatori = $marcatoriReali[$match->id] ?? [];
-            foreach ($marcatori as $m) {
-                if ((int)$m->id_giocatore === (int)$pr->pronostico) return true;
-            }
-            return false;
         }
         return null;
     }
@@ -93,14 +86,6 @@ Route::get('/calcio', function () {
     }
 
     $marcatoriReali = [];
-    if (!empty($allMatchIds)) {
-        foreach (array_chunk($allMatchIds, 100) as $chunk) {
-            $ph = implode(',', array_fill(0, count($chunk), '?'));
-            $s = $pdo->prepare("SELECT mp.*, g.nome AS nome_giocatore FROM totocalcio_marcatori_partita mp JOIN totocalcio_giocatori g ON g.id = mp.id_giocatore WHERE mp.id_partita IN ($ph)");
-            $s->execute($chunk);
-            foreach ($s->fetchAll() as $mp) $marcatoriReali[$mp->id_partita][] = $mp;
-        }
-    }
 
     $quote = $pdo->query('SELECT q.*, p.nome FROM totocalcio_quote_stagionali q JOIN totocalcio_partecipanti p ON p.id = q.id_partecipante ORDER BY p.nome')->fetchAll();
     $quoteMap = [];
@@ -143,7 +128,7 @@ Route::get('/calcio', function () {
     }
 
     // Concorso grid render
-    function renderGrid($co, $partite, $partecipanti, $predMap, $marcatoriReali, $numP, $colW) {
+    function renderGrid($co, $partite, $partecipanti, $predMap, $numP, $colW) {
         $statoBadge = $co->stato === 'aperto' ? '<span class="badge bg-success">Aperto</span>' : ($co->stato === 'chiuso' ? '<span class="badge bg-warning text-dark">Chiuso</span>' : '<span class="badge bg-secondary">Concluso</span>');
         $chiusura = $co->data_chiusura ? date('d/m H:i', strtotime($co->data_chiusura)) : '';
         $html = '<div class="card mt-3"><div class="card-header" onclick="toggleSection(\'co_'.$co->id.'\')" style="cursor:pointer;user-select:none"><div class="d-flex justify-content-between align-items-center"><h2 style="margin:0;font-size:1rem"><i class="fas fa-calendar-alt"></i> '.e($co->nome).' '.$statoBadge.' <small class="text-muted">'.$chiusura.'</small> <span class="badge bg-info" style="font-size:0.6rem">'.(int)$co->num_colonne.' colonne</span></h2><span id="tog_co_'.$co->id.'" class="badge bg-secondary"><i class="fas fa-chevron-up"></i></span></div></div><div id="sec_co_'.$co->id.'" class="card-body p-0" style="overflow-x:auto"><table class="table table-bordered mb-0" style="min-width:'.(380 + $numP * $colW).'px;font-size:0.78rem"><thead><tr><th style="width:30px" class="tc">#</th><th style="width:90px">Tipo</th><th style="width:160px">Partita</th><th style="width:65px" class="tc">Ris</th>';
@@ -157,18 +142,17 @@ Route::get('/calcio', function () {
             $fin = $m->stato === 'finished';
             $live = $m->stato === 'ongoing';
             $sb = $fin ? '<span class="badge bg-success">T</span>' : ($live ? '<span class="badge bg-warning text-dark">'.($m->minuto ? $m->minuto."'" : 'Corso').'</span>' : '<span class="badge bg-secondary">'.($m->data_partita ? date('d/m H:i', strtotime($m->data_partita)) : '').'</span>');
-            $tipoLabel = $m->pannello === 'obbligatorio' ? 'OB' : 'OP';
-            $tipoClass = $m->pannello === 'obbligatorio' ? 'text-primary' : 'text-warning';
+            $tipoLabel = match($m->pannello) { 'obbligatorio' => 'OB', 'obbligatorio_esatto' => 'ES', 'opzionale_scelta' => 'SC', default => 'OP' };
+            $tipoClass = match($m->pannello) { 'obbligatorio' => 'text-primary', 'obbligatorio_esatto' => 'text-success', 'opzionale_scelta' => 'text-warning', default => 'text-secondary' };
             $html .= '<tr><td class="tc">'.(int)$m->ordine.'</td><td class="tc"><small class="'.$tipoClass.' fw-bold">'.$tipoLabel.'</small></td><td><small>'.e($m->squadra_casa).'</small><br><small>'.e($m->squadra_ospite).'</small></td><td class="tc">'.$sb.'<br><strong>'.$ris.'</strong></td>';
             foreach ($partecipanti as $idx => $p) {
                 $cell = '';
                 $prs = $predMap[$m->id][$p->id] ?? [];
                 $pr = $prs[0] ?? null;
                 if ($pr) {
-                    $correct = checkPronostico($pr, $m, $marcatoriReali);
+                    $correct = checkPronostico($pr, $m);
                     $label = $pr->pronostico;
                     if ($pr->tipo === 'risultato_esatto') $label = str_replace('-', '-', $pr->pronostico);
-                    elseif ($pr->tipo === 'marcatore') $label = '⚽';
                     if ($fin) {
                         if ($correct === true) { $cell = '<span class="pred pred-correct" title="Corretto">'.$label.'</span>'; $puntiC[$idx] += (int)$pr->punti; }
                         elseif ($correct === false) $cell = '<span class="pred pred-wrong" title="Errato">'.$label.'</span>';
@@ -192,7 +176,7 @@ Route::get('/calcio', function () {
     foreach ($concorsi as $co) {
         $partite = $partiteByConcorso[$co->id] ?? [];
         if (empty($partite)) continue;
-        $grid = renderGrid($co, $partite, $partecipanti, $predMap, $marcatoriReali, $numP, $colW);
+        $grid = renderGrid($co, $partite, $partecipanti, $predMap, $numP, $colW);
         if ($first && $co->stato !== 'concluso') { $concorsoCorrenteHtml = $grid; $first = false; }
         else { $concorsiPrecedentiHtml .= $grid; }
     }
@@ -259,7 +243,7 @@ body{background:#f5f6fa;min-height:100vh;padding-bottom:80px;font-family:-apple-
 
 <div class="card mt-3 section-highlight"><div class="card-header" onclick="toggleSection(\'classifica-gen\')" style="cursor:pointer;user-select:none"><div class="d-flex justify-content-between align-items-center"><h2 style="margin:0"><i class="fas fa-list"></i> Classifica Generale</h2><span id="tog_classifica-gen" class="badge bg-secondary"><i class="fas fa-chevron-up"></i></span></div></div><div id="sec_classifica-gen" class="card-body p-0" style="overflow-x:auto"><table class="table table-striped mb-0" style="min-width:350px"><thead><tr><th class="tc" style="width:50px">#</th><th>Partecipante</th><th class="tc" style="width:80px">Totale</th></tr></thead><tbody>'.$leaderboardHtml.'</tbody></table></div></div>
 
-<div class="lg mt3"><div class="row text-center align-items-center g-2"><div class="col-3"><span class="pred pred-correct" style="display:inline-block">1</span> <span class="pred pred-wrong" style="display:inline-block">X</span> <span class="pred pred-pending" style="display:inline-block">2</span> <small class="text-muted ms-1">Esito</small></div><div class="col-3"><span class="badge bg-primary">1 pt</span> <small class="text-muted ms-1">1/X/2</small></div><div class="col-3"><span class="badge bg-success">3 pt</span> <small class="text-muted ms-1">Ris. esatto</small></div><div class="col-3"><span class="badge bg-warning text-dark">2 pt</span> <small class="text-muted ms-1">Marcatore</small></div></div><p class="text-center mt-2 mb-0" style="font-size:0.75rem;color:#999"><i class="fas fa-circle text-success"></i> Corretto &middot; <i class="fas fa-circle text-danger"></i> Errato &middot; <i class="fas fa-circle text-secondary"></i> In attesa &middot; OB = Obbligatorio &middot; OP = Opzionale</p></div>
+<div class="lg mt3"><div class="row text-center align-items-center g-2"><div class="col-3"><span class="pred pred-correct" style="display:inline-block">1</span> <span class="pred pred-wrong" style="display:inline-block">X</span> <span class="pred pred-pending" style="display:inline-block">2</span> <small class="text-muted ms-1">Esito</small></div><div class="col-3"><span class="badge bg-primary">1 pt</span> <small class="text-muted ms-1">1/X/2</small></div><div class="col-3"><span class="badge bg-success">3 pt</span> <small class="text-muted ms-1">Ris. esatto</small></div><div class="col-3"><span class="badge bg-info text-dark">1 pt</span> <small class="text-muted ms-1">Scelta 1 su 3</small></div></div><p class="text-center mt-2 mb-0" style="font-size:0.75rem;color:#999"><i class="fas fa-circle text-success"></i> Corretto &middot; <i class="fas fa-circle text-danger"></i> Errato &middot; <i class="fas fa-circle text-secondary"></i> In attesa &middot; OB = Obbligatorio &middot; SC = Scelta 1 su 3 &middot; ES = Risultato Esatto</p></div>
 
 '.$miniHtml.$concorsoCorrenteHtml.'
 

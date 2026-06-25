@@ -121,25 +121,7 @@ if (!empty($allMatchIds)) {
     }
 }
 
-// 6. Marcatori reali per partita
 $marcatoriReali = [];
-if (!empty($allMatchIds)) {
-    $chunks = array_chunk($allMatchIds, 100);
-    foreach ($chunks as $chunk) {
-        $placeholders = implode(',', array_fill(0, count($chunk), '?'));
-        $stmt = $pdo->prepare("
-            SELECT mp.*, g.nome AS nome_giocatore
-            FROM totocalcio_marcatori_partita mp
-            JOIN totocalcio_giocatori g ON g.id = mp.id_giocatore
-            WHERE mp.id_partita IN ($placeholders)
-        ");
-        $stmt->execute($chunk);
-        $rows = $stmt->fetchAll();
-        foreach ($rows as $mp) {
-            $marcatoriReali[$mp->id_partita][] = $mp;
-        }
-    }
-}
 
 // 7. Quote stagionali (per mostrare stato pagamento)
 $quote = $pdo->query('
@@ -155,7 +137,7 @@ foreach ($quote as $q) {
 // ─────────────────────────────────────────────
 // HELPER: calcola se un pronostico è corretto
 // ─────────────────────────────────────────────
-function checkPronostico($pr, $match, $marcatoriReali) {
+function checkPronostico($pr, $match) {
     if ($match->stato !== 'finished') return null;
     if ($pr->tipo === '1x2') {
         $gc = $match->goal_casa;
@@ -170,13 +152,6 @@ function checkPronostico($pr, $match, $marcatoriReali) {
         if ($gc === null || $go === null) return null;
         $expected = $gc . '-' . $go;
         return $pr->pronostico === $expected;
-    }
-    if ($pr->tipo === 'marcatore') {
-        $marcatori = $marcatoriReali[$match->id] ?? [];
-        foreach ($marcatori as $m) {
-            if ((int)$m->id_giocatore === (int)$pr->pronostico) return true;
-        }
-        return false;
     }
     return null;
 }
@@ -285,7 +260,7 @@ foreach ($miniClassifiche as $mc) {
 // ─────────────────────────────────────────────
 $colW = $numP > 20 ? 55 : 65;
 
-function renderConcorsoGrid($co, $partite, $partecipanti, $predMap, $marcatoriReali, $numP, $colW) {
+function renderConcorsoGrid($co, $partite, $partecipanti, $predMap, $numP, $colW) {
     $statoBadge = '';
     if ($co->stato === 'aperto') $statoBadge = '<span class="badge bg-success">Aperto</span>';
     elseif ($co->stato === 'chiuso') $statoBadge = '<span class="badge bg-warning text-dark">Chiuso</span>';
@@ -329,13 +304,23 @@ function renderConcorsoGrid($co, $partite, $partecipanti, $predMap, $marcatoriRe
         elseif ($live) $sb = '<span class="badge bg-warning text-dark">' . ($m->minuto ? $m->minuto . "'" : 'Corso') . '</span>';
         else $sb = '<span class="badge bg-secondary">' . ($m->data_partita ? date('d/m H:i', strtotime($m->data_partita)) : '') . '</span>';
 
-        $tipoLabel = $m->pannello === 'obbligatorio' ? 'OB' : 'OP';
-        $tipoClass = $m->pannello === 'obbligatorio' ? 'text-primary' : 'text-warning';
+        $tipoLabel = match($m->pannello) {
+            'obbligatorio' => 'OB',
+            'obbligatorio_esatto' => 'ES',
+            'opzionale_scelta' => 'SC',
+            default => strtoupper(substr($m->pannello, 0, 2)),
+        };
+        $tipoClass = match($m->pannello) {
+            'obbligatorio' => 'text-primary',
+            'obbligatorio_esatto' => 'text-success',
+            'opzionale_scelta' => 'text-warning',
+            default => 'text-secondary',
+        };
 
         $html .= '<tr>
             <td class="tc">' . (int)$m->ordine . '</td>
             <td class="tc"><small class="' . $tipoClass . ' fw-bold">' . $tipoLabel . '</small></td>
-            <td><small>' . e($m->squadra_casa) . '</small><br><small>' . e($m->squadra_ospite) . '</small></td>
+            <td><small>' . ($m->logo_casa ? '<img src="' . e($m->logo_casa) . '" style="height:14px;width:14px;margin-right:3px">' : '') . e($m->squadra_casa) . '</small><br><small>' . ($m->logo_ospite ? '<img src="' . e($m->logo_ospite) . '" style="height:14px;width:14px;margin-right:3px">' : '') . e($m->squadra_ospite) . '</small></td>
             <td class="tc">' . $sb . '<br><strong>' . $ris . '</strong></td>';
 
         foreach ($partecipanti as $idx => $p) {
@@ -344,13 +329,11 @@ function renderConcorsoGrid($co, $partite, $partecipanti, $predMap, $marcatoriRe
             $pr = $prs[0] ?? null;
 
             if ($pr) {
-                $correct = checkPronostico($pr, $m, $marcatoriReali);
+                $correct = checkPronostico($pr, $m);
                 $label = $pr->pronostico;
 
                 if ($pr->tipo === 'risultato_esatto') {
                     $label = str_replace('-', '-', $pr->pronostico);
-                } elseif ($pr->tipo === 'marcatore') {
-                    $label = '⚽';
                 }
 
                 if ($fin) {
@@ -402,7 +385,7 @@ foreach ($concorsi as $co) {
     $partite = $partiteByConcorso[$co->id] ?? [];
     if (empty($partite)) continue;
 
-    $grid = renderConcorsoGrid($co, $partite, $partecipanti, $predMap, $marcatoriReali, $numP, $colW);
+    $grid = renderConcorsoGrid($co, $partite, $partecipanti, $predMap, $numP, $colW);
 
     if ($first && $co->stato !== 'concluso') {
         $concorsoCorrenteHtml = $grid;
@@ -547,15 +530,15 @@ body{background:#f5f6fa;min-height:100vh;padding-bottom:80px;font-family:-apple-
             <small class="text-muted ms-1">Ris. esatto</small>
         </div>
         <div class="col-3">
-            <span class="badge bg-warning text-dark">2 pt</span>
-            <small class="text-muted ms-1">Marcatore</small>
+            <span class="badge bg-info text-dark">1 pt</span>
+            <small class="text-muted ms-1">Scelta (1 su 3)</small>
         </div>
     </div>
     <p class="text-center mt-2 mb-0" style="font-size:0.75rem;color:#999">
         <i class="fas fa-circle text-success"></i> Corretto &middot;
         <i class="fas fa-circle text-danger"></i> Errato &middot;
         <i class="fas fa-circle text-secondary"></i> In attesa &middot;
-        OB = Obbligatorio &middot; OP = Opzionale
+        OB = Obbligatorio &middot; SC = Scelta 1 su 3 &middot; ES = Risultato Esatto
     </p>
 </div>
 

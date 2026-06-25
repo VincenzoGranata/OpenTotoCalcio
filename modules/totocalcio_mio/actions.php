@@ -1,62 +1,9 @@
 <?php
 
 include_once __DIR__.'/../../core.php';
-
-// Auto-detect partecipante per utenti collegati
-if (empty($id_record) && !empty($user)) {
-    $partecipante = $dbo->fetchOne('SELECT id FROM totocalcio_partecipanti WHERE id_utente = '.prepare($user['id']));
-    if ($partecipante) {
-        $id_record = $partecipante['id'];
-    }
-}
+include_once __DIR__.'/init.php';
 
 switch (filter('op')) {
-    case 'add':
-        if (empty($user) || $user['idgruppo'] != 1) {
-            flash()->error(tr('Accesso negato'));
-            break;
-        }
-        $nome = filter('nome_add');
-        $email = filter('email_add');
-        if (empty($nome)) {
-            flash()->error(tr('Il nome è obbligatorio'));
-        } else {
-            $dbo->insert('totocalcio_partecipanti', [
-                'nome' => $nome,
-                'email' => $email ?: null,
-            ]);
-            $id_record = $dbo->lastInsertedID();
-            flash()->info(tr('Partecipante aggiunto!'));
-        }
-        break;
-
-    case 'update':
-        if (empty($user) || $user['idgruppo'] != 1) {
-            flash()->error(tr('Accesso negato'));
-            break;
-        }
-        $nome = filter('nome');
-        $email = filter('email');
-        if (empty($nome)) {
-            flash()->error(tr('Il nome è obbligatorio'));
-        } else {
-            $dbo->update('totocalcio_partecipanti', [
-                'nome' => $nome,
-                'email' => $email ?: null,
-            ], ['id' => $id_record]);
-            flash()->info(tr('Salvataggio completato!'));
-        }
-        break;
-
-    case 'delete':
-        if (empty($user) || $user['idgruppo'] != 1) {
-            flash()->error(tr('Accesso negato'));
-            break;
-        }
-        $dbo->delete('totocalcio_partecipanti', ['id' => $id_record]);
-        flash()->info(tr('Partecipante eliminato!'));
-        break;
-
     case 'save_colonna':
         $id_partecipante = filter('id_partecipante') ?: $id_record;
         $id_concorso = filter('id_concorso');

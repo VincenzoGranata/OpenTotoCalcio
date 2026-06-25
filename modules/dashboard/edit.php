@@ -87,160 +87,7 @@ if (!isset($_SESSION['dashboard']['idzone'])) {
     }
 }
 
-echo '
-<!-- Filtri -->
-<div class="row">
-	<!-- STATI INTERVENTO -->
-	<div class="dropdown col-md-3" id="dashboard_stati">
-		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
-            <i class="fa fa-filter"></i> '.tr('Stati attività').'
-            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
-        </button>
-		<ul class="dropdown-menu" role="menu">';
-
-// Stati intervento
-$stati_sessione = session_get('dashboard.idstatiintervento', []);
-foreach ($stati_intervento as $stato) {
-    $attr = '';
-    if (in_array("'".$stato['id']."'", $stati_sessione)) {
-        $attr = 'checked="checked"';
-    }
-
-    echo '
-            <li>
-                <input type="checkbox" id="stato_'.$stato['id'].'" class="dashboard_stato" value="'.$stato['id'].'" '.$attr.'>
-                <label for="stato_'.$stato['id'].'">
-                    '.$stato['descrizione'].'
-                </label>
-                <span class="img-circle square pull-right" style="'.(setting('Visualizzazione colori sessioni') == 'Sfondo colore stato - bordo colore tecnico' ? 'box-shadow:none; background-color:'.$stato['colore'] : 'box-shadow:0 0 0 2px '.$stato['colore']).';"></span>
-
-            </li>';
-}
-
-echo '
-			<div class="btn-group float-right">
-				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
-                    '.tr('Tutti').'
-                </button>
-				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
-                    <i class="fa fa-times"></i>
-                </button>
-			</div>
-		</ul>
-	</div>
-
-	<!-- TIPI INTERVENTO -->
-	<div class="dropdown col-md-3" id="dashboard_tipi">
-		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
-            <i class="fa fa-filter"></i> '.tr('Tipi attività').'
-            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
-        </button>
-		<ul class="dropdown-menu" role="menu">';
-
-// Tipi intervento
-$tipi_sessione = session_get('dashboard.idtipiintervento', []);
-foreach ($tipi_intervento as $tipo) {
-    $attr = '';
-    if (in_array("'".$tipo['id']."'", $tipi_sessione)) {
-        $attr = 'checked="checked"';
-    }
-
-    echo '
-            <li>
-                <input type="checkbox" id="tipo_'.$tipo['id'].'" class="dashboard_tipo" value="'.$tipo['id'].'" '.$attr.'>
-                <label for="tipo_'.$tipo['id'].'">
-                    '.$tipo['descrizione'].'
-                </label>
-            </li>';
-}
-
-echo '
-			<div class="btn-group float-right">
-				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
-                    '.tr('Tutti').'
-                </button>
-				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
-                    <i class="fa fa-times"></i>
-                </button>
-			</div>
-		</ul>
-	</div>
-
-	<!-- TECNICI -->
-	<div class="dropdown col-md-3" id="dashboard_tecnici">
-		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
-            <i class="fa fa-filter"></i> '.tr('Tecnici').'
-            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
-        </button>
-		<ul class="dropdown-menu" role="menu">';
-
-$tecnici_sessione = session_get('dashboard.idtecnici', []);
-foreach ($tecnici_disponibili as $tecnico) {
-    $attr = '';
-    if (in_array("'".$tecnico['id']."'", $tecnici_sessione)) {
-        $attr = 'checked="checked"';
-    }
-
-    echo '
-            <li>
-                <input type="checkbox" id="tecnico_'.$tecnico['id'].'" class="dashboard_tecnico" value="'.$tecnico['id'].'" '.$attr.'>
-                <label for="tecnico_'.$tecnico['id'].'">
-                    '.$tecnico['ragione_sociale'].'
-                </label>
-                <span class="img-circle square pull-right" style="'.(setting('Visualizzazione colori sessioni') == 'Sfondo colore stato - bordo colore tecnico' ? 'box-shadow:0 0 0 2px '.$tecnico['colore'] : 'box-shadow:none; background-color:'.$tecnico['colore']).';"></span>
-            </li>';
-}
-
-echo '
-			<div class="btn-group float-right">
-				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
-                    '.tr('Tutti').'
-                </button>
-				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
-                    <i class="fa fa-times"></i>
-                </button>
-			</div>
-		</ul>
-	</div>
-
-	<!-- ZONE -->
-	<div class="dropdown col-md-3" id="dashboard_zone">
-		<button type="button" class="btn btn-block counter_object" data-toggle="dropdown">
-            <i class="fa fa-filter"></i> '.tr('Zone').'
-            (<span class="selected_counter"></span>/<span class="total_counter"></span>) <i class="caret"></i>
-        </button>
-		<ul class="dropdown-menu" role="menu">';
-
-// Zone
-$zone_sessione = session_get('dashboard.idzone', []);
-foreach ($zone as $zona) {
-    $attr = '';
-    if (in_array("'".$zona['id']."'", $zone_sessione)) {
-        $attr = 'checked="checked"';
-    }
-
-    echo '
-            <li>
-                <input type="checkbox" id="zona_'.$zona['id'].'" class="dashboard_zona" value="'.$zona['id'].'" '.$attr.'>
-                <label for="zona_'.$zona['id'].'">
-                   '.$zona['descrizione'].'
-                </label>
-            </li>';
-}
-
-echo '
-			<div class="btn-group float-right">
-				<button type="button" class="btn btn-primary btn-sm seleziona_tutto">
-                    '.tr('Tutti').'
-                </button>
-				<button type="button" class="btn btn-danger btn-sm deseleziona_tutto">
-                    <i class="fa fa-times"></i>
-                </button>
-			</div>
-		</ul>
-	</div>
-</div>
-<br>';
+echo '<!-- Filtri standard nascosti -->';
 
 $solo_promemoria_assegnati = setting('Visualizza solo promemoria assegnati');
 $id_tecnico = null;
@@ -284,6 +131,48 @@ if (!empty($risultati_da_programmare)) {
 }
 
 echo '
+<div class="card card-primary">
+    <div class="card-body p-2" style="max-height:400px;overflow-y:auto">
+        ';
+
+// Include the calendario widget inline
+include base_dir().'/modules/totocalcio/widgets/calendario_dashboard.php';
+
+echo '
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="col-md-4">
+        <select id="filter-giornata" class="form-control form-control-sm no-search">
+            <option value="">'.tr('Tutte le giornate').'</option>';
+$giornate = $dbo->fetchArray('SELECT id, giornata, nome FROM totocalcio_concorsi ORDER BY giornata ASC');
+foreach ($giornate as $g) {
+    echo '<option value="'.$g['id'].'">'.$g['nome'].'</option>';
+}
+echo '
+        </select>
+    </div>
+    <div class="col-md-4">
+        <select id="filter-squadra" class="form-control form-control-sm no-search">
+            <option value="">'.tr('Tutte le squadre').'</option>';
+$squadre = $dbo->fetchArray('SELECT id, nome FROM totocalcio_squadre ORDER BY nome ASC');
+foreach ($squadre as $s) {
+    echo '<option value="'.$s['nome'].'">'.$s['nome'].'</option>';
+}
+echo '
+        </select>
+    </div>
+    <div class="col-md-4">
+        <select id="filter-stato" class="form-control form-control-sm no-search">
+            <option value="">'.tr('Tutti gli stati').'</option>
+            <option value="scheduled">Programmata</option>
+            <option value="ongoing">In corso</option>
+            <option value="finished">Terminata</option>
+        </select>
+    </div>
+</div>
+
 <div id="calendar"></div>';
 
 if (!empty($risultati_da_programmare)) {
@@ -818,6 +707,22 @@ echo '
                     failure: function () {
                         swal(globals.dashboard.genericError, globals.dashboard.error, "error");
                     }
+                },
+                {
+                    url: globals.dashboard.load_url,
+                    method: "POST",
+                    extraParams: function() {
+                        return {
+                            op: "serie_a_matches",
+                            id_module: "'.$id_module.'",
+                            giornata: document.getElementById("filter-giornata") ? document.getElementById("filter-giornata").value : "",
+                            squadra: document.getElementById("filter-squadra") ? document.getElementById("filter-squadra").value : "",
+                            stato: document.getElementById("filter-stato") ? document.getElementById("filter-stato").value : ""
+                        };
+                    },
+                    failure: function () {
+                        swal(globals.dashboard.genericError, globals.dashboard.error, "error");
+                    }
                 }
 
             ]
@@ -833,5 +738,16 @@ echo '
         calendar.render();
 
         globals.dashboard.calendar = calendar;
+
+        // Filter change handlers for Serie A matches
+        document.getElementById("filter-giornata").addEventListener("change", function() {
+            globals.dashboard.calendar.refetchEvents();
+        });
+        document.getElementById("filter-squadra").addEventListener("change", function() {
+            globals.dashboard.calendar.refetchEvents();
+        });
+        document.getElementById("filter-stato").addEventListener("change", function() {
+            globals.dashboard.calendar.refetchEvents();
+        });
     }
 </script>';

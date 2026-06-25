@@ -55,15 +55,6 @@ class CalcoloPuntiService
             return ($pr['pronostico'] === $actual) ? 3 : 0;
         }
 
-        if ($pr['tipo'] === 'marcatore') {
-            $marcatori = \database()->fetchArray('
-                SELECT id FROM totocalcio_marcatori_partita
-                WHERE id_partita = '.prepare($pr['id_partita']).'
-                AND id_giocatore = '.prepare((int)$pr['pronostico'])
-            );
-            return !empty($marcatori) ? 2 : 0;
-        }
-
         return 0;
     }
 

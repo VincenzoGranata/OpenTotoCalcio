@@ -6,24 +6,35 @@ use League\OAuth2\Client\Provider\GenericProvider;
 
 class KeycloakLogin extends GenericProvider implements ProviderInterface
 {
-    /**
-     * Impostazioni native per la connessione.
-     *
-     * @var string[][]
-     */
     protected static $options = [];
+    private $customScopes = [];
 
     public function __construct(array $options = [], array $collaborators = [])
     {
-        // Configurazioni specifiche per il provider Keycloak
+        $authServerUrl = $options['auth_server_url'];
+        $realm = $options['realm'];
+        $publicUrl = $options['public_auth_server_url'] ?? $authServerUrl;
+
+        $this->customScopes = ['openid', 'profile', 'email'];
+
         $config = array_merge($options, [
-            'urlAuthorize' => $options['auth_server_url'].'/realms/'.$options['realm'].'/protocol/openid-connect/auth',
-            'urlAccessToken' => $options['auth_server_url'].'/realms/'.$options['realm'].'/protocol/openid-connect/token',
-            'urlResourceOwnerDetails' => $options['auth_server_url'].'/realms/'.$options['realm'].'/protocol/openid-connect/userinfo',
+            'urlAuthorize' => $publicUrl.'/realms/'.$realm.'/protocol/openid-connect/auth',
+            'urlAccessToken' => $authServerUrl.'/realms/'.$realm.'/protocol/openid-connect/token',
+            'urlResourceOwnerDetails' => $authServerUrl.'/realms/'.$realm.'/protocol/openid-connect/userinfo',
             'redirectUri' => base_url().'/oauth2_login.php',
         ]);
 
         parent::__construct($config, $collaborators);
+    }
+
+    public function getDefaultScopes()
+    {
+        return $this->customScopes;
+    }
+
+    public function getScopeSeparator()
+    {
+        return ' ';
     }
 
     public function getOptions()
@@ -35,7 +46,11 @@ class KeycloakLogin extends GenericProvider implements ProviderInterface
     {
         return [
             'auth_server_url' => [
-                'label' => 'Auth Server URL',
+                'label' => 'Auth Server URL (internal)',
+                'type' => 'text',
+            ],
+            'public_auth_server_url' => [
+                'label' => 'Public Auth Server URL (browser)',
                 'type' => 'text',
             ],
             'realm' => [

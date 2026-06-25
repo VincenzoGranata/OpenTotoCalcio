@@ -20,6 +20,9 @@
 
 include_once __DIR__.'/core.php';
 
+// Debug: intercetta errori nelle actions del modulo
+error_log("[actions] Start - op=" . (filter('op') ?: 'NULL') . " id_module=" . ($id_module ?? 'NULL') . " id_record=" . ($id_record ?? 'NULL'));
+
 use Models\Module;
 use Models\Note;
 use Models\OperationLog;

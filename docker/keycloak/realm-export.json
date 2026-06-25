@@ -1,0 +1,62 @@
+{
+  "realm": "totosport",
+  "displayName": "Totocalcio Serie A",
+  "enabled": true,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": true,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "sslRequired": "external",
+  "users": [
+    {
+      "username": "admin",
+      "email": "admin@totosport.local",
+      "firstName": "Admin",
+      "lastName": "Totocalcio",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin",
+          "temporary": false
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "osm-totocalcio",
+      "name": "OSM Totocalcio",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "redirectUris": [
+        "http://localhost:8080/*",
+        "http://localhost:8080/oauth2_login.php",
+        "http://localhost:8080/oauth2.php"
+      ],
+      "webOrigins": [
+        "http://localhost:8080"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "osm-secret-key-2026",
+      "defaultClientScopes": ["openid", "profile", "email"],
+      "optionalClientScopes": ["address", "phone"]
+    }
+  ],
+  "identityProviders": [],
+  "browserFlow": "browser",
+  "registrationFlow": "registration",
+  "loginTheme": "",
+  "accountTheme": "",
+  "adminTheme": "",
+  "emailTheme": ""
+}

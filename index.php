@@ -267,7 +267,7 @@ if ($dbo->isInstalled() && $dbo->isConnected() && !Update::isUpdateAvailable()) 
                         if ($keycloack) {
                             echo '
                             <a href="'.base_path_osm().'/oauth2_login.php?id='.$keycloack['id'].'" class="btn btn-block btn-social btn-info btn-flat shadow-sm">
-                                <i class="fa fa-key mr-2"></i>'.tr('Accedi con Keycloack').'
+                                <i class="fa fa-key mr-2"></i>'.tr('Accedi con Keycloak').'
                             </a>';
                         }
                         echo '

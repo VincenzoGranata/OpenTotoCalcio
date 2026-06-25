@@ -3,6 +3,7 @@
 include_once __DIR__.'/../../../core.php';
 
 $id_partecipante = $id_partecipante ?? $id_record ?? 0;
+if (empty($id_partecipante)) { echo '<div class="alert alert-warning">'.tr('Partecipante non trovato').'</div>'; return; }
 
 $colonne = $dbo->fetchArray('
     SELECT c.*, co.nome AS concorso, co.giornata, co.stato AS stato_concorso
@@ -13,7 +14,7 @@ $colonne = $dbo->fetchArray('
 ');
 
 if (empty($colonne)) {
-    echo '<p>'.tr('Nessuna colonna. Vai su "Nuova Giocata" per crearne una.').'</p>';
+    echo '<p class="text-muted">'.tr('Nessuna colonna inserita.').'</p>';
     return;
 }
 ?>
@@ -24,7 +25,7 @@ if (empty($colonne)) {
                 <th>Concorso</th>
                 <th>Giornata</th>
                 <th class="text-center">Punti</th>
-                <th class="text-center">Dettaglio</th>
+                <th class="text-center">Pronostici</th>
                 <th>Data</th>
             </tr>
         </thead>
@@ -35,7 +36,7 @@ if (empty($colonne)) {
                     FROM totocalcio_pronostici pr
                     JOIN totocalcio_partite pa ON pa.id = pr.id_partita
                     WHERE pr.id_colonna = '.prepare($c['id']).'
-                    ORDER BY pa.pannello, pa.ordine
+                    ORDER BY FIELD(pa.pannello, \'obbligatorio\', \'obbligatorio_esatto\', \'opzionale_scelta\'), pa.ordine
                 ');
                 $numOk = count(array_filter($pronostici, fn($pr) => $pr['punti'] > 0));
             ?>
@@ -48,9 +49,9 @@ if (empty($colonne)) {
                         $label = $pr['pronostico'];
                         if ($pr['tipo'] === 'risultato_esatto') $label = str_replace('-', '‑', $pr['pronostico']);
                         $cls = $pr['punti'] > 0 ? 'success' : ($pr['punti'] === 0 && $pr['stato'] === 'finished' ? 'danger' : 'secondary');
-                        $tooltip = $pr['squadra_casa'].' - '.$pr['squadra_ospite'].' ('.$pr['tipo'].': '.$pr['pronostico'].')';
+                        $tt = $pr['squadra_casa'].' - '.$pr['squadra_ospite'].' ('.$pr['tipo'].': '.$pr['pronostico'].')';
                     ?>
-                        <span class="badge badge-<?php echo $cls; ?>" title="<?php echo $tooltip; ?>"><?php echo $label; ?></span>
+                        <span class="badge badge-<?php echo $cls; ?>" title="<?php echo $tt; ?>"><?php echo $label; ?></span>
                     <?php endforeach; ?>
                     <span class="small text-muted">(<?php echo $numOk; ?>/<?php echo count($pronostici); ?>)</span>
                 </td>

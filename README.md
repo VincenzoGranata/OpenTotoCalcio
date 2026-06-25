@@ -30,7 +30,7 @@ Anagrafica dei 68 partecipanti al Totocalcio.
 
 ### Pronostici (Concorsi)
 Gestione delle 38 giornate di campionato.
-- **Assegna Pannelli** — divide le 10 partite in 7 obbligatorie (1X2) e 3 opzionali (1X2, risultato esatto, marcatore)
+- **Assegna Pannelli** — divide le 10 partite in 6 obbligatorie (1X2, 1pt cad.), 1 risultato esatto (3pt) e 3 scelta (1 su 3, 1pt)
 - **Chiudi Giornata** — blocca l'inserimento pronostici per la giornata
 
 ### Classifica Totocalcio

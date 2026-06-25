@@ -650,4 +650,74 @@ switch (filter('op')) {
         echo json_encode($results);
 
         break;
+
+    case 'serie_a_matches':
+        $start = filter('start');
+        $end = filter('end');
+
+        $where = 'p.data_partita >= '.prepare($start).' AND p.data_partita <= '.prepare($end);
+
+        $filter_giornata = filter('giornata');
+        if (!empty($filter_giornata)) {
+            $where .= ' AND p.id_concorso = '.prepare($filter_giornata);
+        }
+
+        $filter_squadra = filter('squadra');
+        if (!empty($filter_squadra)) {
+            $squadra_esc = prepare($filter_squadra);
+            $where .= ' AND (p.squadra_casa = '.$squadra_esc.' OR p.squadra_ospite = '.$squadra_esc.')';
+        }
+
+        $filter_stato = filter('stato');
+        if (!empty($filter_stato)) {
+            $where .= ' AND p.stato = '.prepare($filter_stato);
+        }
+
+        $partite = $dbo->fetchArray('
+            SELECT p.*, c.giornata
+            FROM totocalcio_partite p
+            JOIN totocalcio_concorsi c ON c.id = p.id_concorso
+            WHERE '.$where.'
+            ORDER BY p.data_partita ASC
+        ');
+
+        $results = [];
+        foreach ($partite as $p) {
+            $ris = ($p['goal_casa'] !== null && $p['goal_ospite'] !== null) ? $p['goal_casa'].'-'.$p['goal_ospite'] : '';
+
+            $bg = '#3788d8';
+            $textColor = '#fff';
+            if ($p['stato'] === 'finished') {
+                $bg = '#28a745';
+            } elseif ($p['stato'] === 'ongoing') {
+                $bg = '#ffc107';
+                $textColor = '#333';
+            }
+
+            $title = $p['squadra_casa'].' vs '.$p['squadra_ospite'];
+            if ($ris) {
+                $title .= ' ('.$ris.')';
+            }
+
+            $logoCasa = $p['logo_casa'] ? '<img src="'.$p['logo_casa'].'" style="height:14px;margin-right:4px">' : '';
+            $logoOspite = $p['logo_ospite'] ? '<img src="'.$p['logo_ospite'].'" style="height:14px;margin-left:4px">' : '';
+
+            $results[] = [
+                'id' => 'seriea_'.$p['id'],
+                'title' => $logoCasa.$p['squadra_casa'].' - '.$p['squadra_ospite'].$logoOspite,
+                'start' => $p['data_partita'],
+                'backgroundColor' => $bg,
+                'textColor' => $textColor,
+                'borderColor' => $bg,
+                'allDay' => false,
+                'extendedProps' => [
+                    'id_partita' => $p['id'],
+                    'giornata' => $p['giornata'],
+                    'risultato' => $ris ?: '? - ?',
+                ],
+            ];
+        }
+
+        echo json_encode($results);
+        break;
 }

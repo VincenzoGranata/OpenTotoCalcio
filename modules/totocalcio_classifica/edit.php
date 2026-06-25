@@ -148,19 +148,19 @@ $miniClassifiche = $dbo->fetchArray('SELECT * FROM totocalcio_mini_classifiche O
                 <div class="row">
                     <div class="col-md-3 text-center">
                         <span class="badge badge-primary" style="font-size:18px">1 pt</span>
-                        <p class="mt-2">Pronostico 1/X/2<br><small class="text-muted">Obbligatori e Opzionale scelta</small></p>
+                        <p class="mt-2">Pronostico 1/X/2<br><small class="text-muted">Obbligatori e Scelta (1 su 3)</small></p>
                     </div>
                     <div class="col-md-3 text-center">
                         <span class="badge badge-success" style="font-size:18px">3 pt</span>
                         <p class="mt-2">Risultato Esatto<br><small class="text-muted">Opzionale dedicato</small></p>
                     </div>
                     <div class="col-md-3 text-center">
-                        <span class="badge badge-warning" style="font-size:18px">2 pt</span>
-                        <p class="mt-2">Marcatore<br><small class="text-muted">Almeno 1 gol del giocatore</small></p>
+                        <span class="badge badge-info" style="font-size:18px">1 pt</span>
+                        <p class="mt-2">Scelta (1 su 3)<br><small class="text-muted">Scegli 1 partita su 3</small></p>
                     </div>
                     <div class="col-md-3 text-center">
-                        <span class="badge" style="font-size:18px;background:#e94560;color:#fff">13 pt</span>
-                        <p class="mt-2">Massimo per giornata<br><small class="text-muted">7+1+3+2</small></p>
+<span class="badge" style="font-size:18px;background:#e94560;color:#fff">11 pt</span>
+<p class="mt-2">Massimo per giornata<br><small class="text-muted">7 obbligatori + 1 scelta (1 su 3) + 1 esatto = 11pt</small></p>
                     </div>
                 </div>
                 <hr>

@@ -1,6 +1,13 @@
 <?php
 
 include_once __DIR__.'/../../core.php';
+
+// Blocca l'accesso per utenti non admin
+$is_admin = !empty($user) && $user['idgruppo'] == 1;
+if (!$is_admin) {
+    echo '<div class="alert alert-danger">'.tr('Accesso negato').'</div>';
+    return;
+}
 ?>
 <form action="" method="post">
     <input type="hidden" name="op" value="add">

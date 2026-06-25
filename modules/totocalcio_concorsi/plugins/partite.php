@@ -27,8 +27,18 @@ if (empty($partite)) {
         <tbody>
             <?php foreach ($partite as $p):
                 $ris = ($p['goal_casa'] !== null && $p['goal_ospite'] !== null) ? $p['goal_casa'].'-'.$p['goal_ospite'] : '?';
-                $tipoClass = $p['pannello'] === 'obbligatorio' ? 'primary' : 'warning';
-                $tipoLabel = $p['pannello'] === 'obbligatorio' ? 'OB' : 'OP';
+                $tipoLabel = match($p['pannello']) {
+                    'obbligatorio' => 'OB',
+                    'obbligatorio_esatto' => 'ES',
+                    'opzionale_scelta' => 'SC',
+                    default => $p['pannello'],
+                };
+                $tipoClass = match($p['pannello']) {
+                    'obbligatorio' => 'primary',
+                    'obbligatorio_esatto' => 'success',
+                    'opzionale_scelta' => 'warning',
+                    default => 'secondary',
+                };
             ?>
             <tr>
                 <td><?php echo $p['ordine']; ?></td>
