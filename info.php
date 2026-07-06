@@ -29,7 +29,7 @@ include_once App::filepath('include|custom|', 'top.php');
 echo '
 <div class="card">
     <div class="card-header">
-        <img src="'.App::getPaths()['img'].'/logo_totosport.png" class="pull-left img-responsive" width="300" alt="'.tr('TotoSport Logo').'">
+        <img src="'.App::getPaths()['img'].'/logo_totosport.png" class="pull-left img-responsive" width="300" alt="'.tr('OpenTotoCalcio Logo').'">
         <div class="float-right d-none d-sm-inline">
             <i class="fa fa-info"></i> '.tr('Informazioni').'
         </div>
@@ -43,7 +43,7 @@ if (file_exists(base_dir().'/assistenza.php')) {
     echo '
         <div class="row">
             <div class="col-md-8">
-                <p>'.tr('<b>TotoSport</b> è un\'applicazione per la <b>gestione di pronostici calcistici</b> dedicata al Totocalcio per Serie A.').'</p>
+                <p>'.tr('<b>OpenTotoCalcio</b> è un\'applicazione per la <b>gestione di pronostici calcistici</b> dedicata al Totocalcio per Serie A.').'</p>
 
                 <p>'.tr('L\'applicazione permette di gestire leghe di pronostici tra partecipanti, con calendario delle partite, inserimento pronostici, calcolo automatico dei punti e classifiche in tempo reale.').'</p>
             </div>
@@ -67,11 +67,11 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr("TotoSport è un progetto software libero che permette a tutti di conoscere come funziona avendo il codice sorgente del programma e fornisce così la possibilità di studiarlo, modificarlo e adattarlo alle proprie esigenze").'.</p>
+                        <p>'.tr("OpenTotoCalcio è un progetto software libero che permette a tutti di conoscere come funziona avendo il codice sorgente del programma e fornisce così la possibilità di studiarlo, modificarlo e adattarlo alle proprie esigenze").'.</p>
 
                         <p>'.tr("E' importante sapere come funziona per conoscere come vengono trattati i VOSTRI dati, proteggendo così la vostra <b>privacy</b>").'.</p>
 
-                        <p>'.tr('TotoSport è stato sviluppato utilizzando software libero, tra cui').':</p>
+                        <p>'.tr('OpenTotoCalcio è stato sviluppato utilizzando software libero, tra cui').':</p>
                         <ul>
                             <li><a href="https://www.php.net" target="_blank"><i class="fa fa-circle-o-notch"></i> PHP</a></li>
                             <li><a href="https://www.mysql.com" target="_blank"><i class="fa fa-circle-o-notch"></i> MySQL</a></li>
@@ -90,7 +90,7 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr('TotoSport include moduli per la gestione completa dei pronostici').':</p>
+                        <p>'.tr('OpenTotoCalcio include moduli per la gestione completa dei pronostici').':</p>
                         <ul>
                             <li><i class="fa fa-calendar"></i> '.tr('Calendario Serie A con sincronizzazione automatica').'</li>
                             <li><i class="fa fa-users"></i> '.tr('Gestione partecipanti e pronostici').'</li>
@@ -106,7 +106,7 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr("Le funzionalità principali di <strong>TotoSport</strong> includono").':</p>
+                        <p>'.tr("Le funzionalità principali di <strong>OpenTotoCalcio</strong> includono").':</p>
                         <ul>
                             <li><i class="fa fa-check"></i> '.tr('Gestione 38 giornate di campionato').'</li>
                             <li><i class="fa fa-check"></i> '.tr('Sistema di pannelli e pronostici').'</li>
@@ -127,7 +127,7 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr('TotoSport utilizza API esterne per fornire dati aggiornati').':</p>
+                        <p>'.tr('OpenTotoCalcio utilizza API esterne per fornire dati aggiornati').':</p>
                         <div class="well">
                             <div class="row">
                                 <div class="col-xs-4 text-center">
@@ -162,7 +162,7 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr('TotoSport è un progetto in continua evoluzione, sviluppato per fornire un\'esperienza completa di gestione pronostici').'.</p>
+                        <p>'.tr('OpenTotoCalcio è un progetto in continua evoluzione, sviluppato per fornire un\'esperienza completa di gestione pronostici').'.</p>
 
                         <p>'.tr('L\'applicazione è basata su architettura modulare e può essere personalizzata ed estesa secondo le proprie esigenze').'.</p>
 

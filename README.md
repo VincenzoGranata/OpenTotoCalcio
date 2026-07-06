@@ -1,8 +1,8 @@
-# TotoSport
+# OpenTotoCalcio
 
 Gestione pronostici calcistici per Serie A (Totocalcio).
 
-Applicazione personalizzata per la gestione di leghe di pronostici tra partecipanti.
+Basato su framework open source, personalizzato per la gestione di leghe di pronostici tra partecipanti.
 
 ---
 
