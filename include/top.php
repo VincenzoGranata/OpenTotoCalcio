@@ -37,7 +37,7 @@ if (empty($pageTitle)) {
     } elseif ($structure) {
         $pageTitle = $structure->getTranslation('title');
     } else {
-        $pageTitle = tr('OpenSTAManager');
+        $pageTitle = tr('TotoSport');
     }
 }
 
@@ -54,8 +54,8 @@ echo '<!DOCTYPE html>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
         <meta name="robots" content="noindex,nofollow">
-        <meta name="description" content="'.tr('OpenTotoCalcio - Gestione pronostici e classifiche').'">
-        <meta name="author" content="OpenTotoCalcio">
+        <meta name="description" content="'.tr('TotoSport - Gestione pronostici e classifiche').'">
+        <meta name="author" content="TotoSport">
 
 			<link href="'.$paths['img'].'/logo_totosport.png" rel="icon" type="image/png" />';
 
@@ -507,8 +507,8 @@ if (AuthOSM::check()) {
 
             <!-- Main Sidebar Container -->
             <aside class="main-sidebar '.$theme.' elevation-4">
-                <a href="'.base_path_osm().'/controller.php?id_module=121" class="brand-link" title="'.tr('OpenTotoCalcio').'">
-                    <img src="'.App::getPaths()['img'].'/logo_totosport.png" class="brand-image" alt="'.tr('OpenTotoCalcio').'">
+                <a href="'.base_path_osm().'/controller.php?id_module=121" class="brand-link" title="'.tr('TotoSport').'">
+                    <img src="'.App::getPaths()['img'].'/logo_totosport.png" class="brand-image" alt="'.tr('TotoSport').'">
                     <span class="brand-text font-weight-light">&nbsp;</span>
 
                 </a>

@@ -101,6 +101,9 @@ COPY . .
 COPY --from=backend-builder /app/vendor /var/www/html/vendor
 COPY --from=frontend-builder /app/assets/dist /var/www/html/assets/dist
 
+# Copy custom logos from local assets/dist/img to preserve them during build
+COPY assets/dist/img /var/www/html/assets/dist/img
+
 # Generate final autoloader using Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer dump-autoload --optimize --no-scripts

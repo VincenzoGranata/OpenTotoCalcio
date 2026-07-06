@@ -26,7 +26,7 @@ if (AuthOSM::check()) {
             </div><!-- /.content-wrapper -->
 
 			<footer class="main-footer">
-                <strong>'.tr('OpenTotoCalcio').'</strong>
+                <strong>'.tr('TotoSport').'</strong>
 				<span class="pull-right hidden-xs">
                     <strong>'.tr('Versione').'</strong> '.$version.'
                     <small class="text-secondary">('.(!empty($revision) ? $revision : tr('In sviluppo')).')</small>

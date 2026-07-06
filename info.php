@@ -29,7 +29,7 @@ include_once App::filepath('include|custom|', 'top.php');
 echo '
 <div class="card">
     <div class="card-header">
-        <img src="'.App::getPaths()['img'].'/logo_completo.png" class="pull-left img-responsive" width="300" alt="'.tr('OSM Logo').'">
+        <img src="'.App::getPaths()['img'].'/logo_totosport.png" class="pull-left img-responsive" width="300" alt="'.tr('TotoSport Logo').'">
         <div class="float-right d-none d-sm-inline">
             <i class="fa fa-info"></i> '.tr('Informazioni').'
         </div>
@@ -43,17 +43,17 @@ if (file_exists(base_dir().'/assistenza.php')) {
     echo '
         <div class="row">
             <div class="col-md-8">
-                <p>'.tr('<b>OpenSTAManager</b> è un <b>software libero</b> mantenuto da <a href="https://www.devcode.it" target="_blank">Devcode Srl</a>').'.</p>
+                <p>'.tr('<b>TotoSport</b> è un\'applicazione per la <b>gestione di pronostici calcistici</b> dedicata al Totocalcio per Serie A.').'</p>
 
-                <p>'.tr('Il nome significa "Gestore di STA (<b>Servizio Tecnico Assistenza</b>) aperto" ed è stato creato per gestire e archiviare l\'assistenza tecnica fornita ai propri clienti').'.</p>
+                <p>'.tr('L\'applicazione permette di gestire leghe di pronostici tra partecipanti, con calendario delle partite, inserimento pronostici, calcolo automatico dei punti e classifiche in tempo reale.').'</p>
             </div>
 
             <div class="col-md-4">
-                <p><b>'.tr('Sito web').':</b> <a href="https://www.openstamanager.com" target="_blank" title="'.tr('Software gestionale open source per assistenza tecnica e fatturazione').'" >www.openstamanager.com</a></p>
-
                 <p><b>'.tr('Versione').':</b> '.$version.' <small class="text-secondary">('.(!empty($revision) ? 'R'.$revision : tr('In sviluppo')).')</small></p>
 
                 <p><b>'.tr('Licenza').':</b> <a href="https://www.gnu.org/licenses/gpl-3.0.txt" target="_blank" title="'.tr('Vai al sito per leggere la licenza').'">GPLv3</a></p>
+
+                <p><b>'.tr('Stagione').':</b> 2026/27</p>
             </div>
         </div>
 
@@ -67,11 +67,11 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr("Il progetto è software libero perchè permette a tutti di conoscere come funziona avendo il codice sorgente del programma e fornisce così la possibilità di studiare come funziona, modificarlo, adattarlo alle proprie esigenze e, in ambito commerciale, non obbliga l'utilizzatore ad essere legato allo stesso fornitore di assistenza").'.</p>
+                        <p>'.tr("TotoSport è un progetto software libero che permette a tutti di conoscere come funziona avendo il codice sorgente del programma e fornisce così la possibilità di studiarlo, modificarlo e adattarlo alle proprie esigenze").'.</p>
 
-                        <p>'.tr("E' altrettanto importante sapere come funziona per conoscere come vengono trattati i VOSTRI dati, proteggendo così la vostra <b>privacy</b>").'.</p>
+                        <p>'.tr("E' importante sapere come funziona per conoscere come vengono trattati i VOSTRI dati, proteggendo così la vostra <b>privacy</b>").'.</p>
 
-                        <p>'.tr('OpenSTAManager è inoltre stato progettato utilizzando altro software libero, tra cui principalmente').':</p>
+                        <p>'.tr('TotoSport è stato sviluppato utilizzando software libero, tra cui').':</p>
                         <ul>
                             <li><a href="https://www.php.net" target="_blank"><i class="fa fa-circle-o-notch"></i> PHP</a></li>
                             <li><a href="https://www.mysql.com" target="_blank"><i class="fa fa-circle-o-notch"></i> MySQL</a></li>
@@ -90,8 +90,13 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr("Tutti gli aggiornamenti e le nuove versioni sono disponibili all'indirizzo").':</p>
-                        <a href="https://www.openstamanager.com/downloads/" target="_blank"><i class="fa fa-external-link"></i> www.openstamanager.com/downloads/</a>
+                        <p>'.tr('TotoSport include moduli per la gestione completa dei pronostici').':</p>
+                        <ul>
+                            <li><i class="fa fa-calendar"></i> '.tr('Calendario Serie A con sincronizzazione automatica').'</li>
+                            <li><i class="fa fa-users"></i> '.tr('Gestione partecipanti e pronostici').'</li>
+                            <li><i class="fa fa-trophy"></i> '.tr('Classifiche in tempo reale').'</li>
+                            <li><i class="fa fa-futbol-o"></i> '.tr('Sincronizzazione risultati partite').'</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -101,8 +106,14 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr("La guida all'utilizzo di <strong>OpenSTAManager</strong> e la documentazione tecnica sono consultabili all'indirizzo").':</p>
-                        <a href="https://docs.openstamanager.com/" target="_blank"><i class="fa fa-external-link"></i> docs.openstamanager.com/</a>
+                        <p>'.tr("Le funzionalità principali di <strong>TotoSport</strong> includono").':</p>
+                        <ul>
+                            <li><i class="fa fa-check"></i> '.tr('Gestione 38 giornate di campionato').'</li>
+                            <li><i class="fa fa-check"></i> '.tr('Sistema di pannelli e pronostici').'</li>
+                            <li><i class="fa fa-check"></i> '.tr('Calcolo automatico punti e vincite').'</li>
+                            <li><i class="fa fa-check"></i> '.tr('Classifiche generali e periodiche').'</li>
+                            <li><i class="fa fa-check"></i> '.tr('Sincronizzazione con API esterne per risultati').'</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -116,47 +127,27 @@ if (file_exists(base_dir().'/assistenza.php')) {
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr('La community è un componente importante in un progetto open-source perchè mette in contatto le persone tra di loro, utenti e programmatori').'.</p>
-
-                        <p>'.tr('Con OpenSTAManager siamo presenti su').':</p>
+                        <p>'.tr('TotoSport utilizza API esterne per fornire dati aggiornati').':</p>
                         <div class="well">
                             <div class="row">
-                                <div class="col-xs-2 text-center">
-                                    <a href="https://github.com/devcode-it/openstamanager" target="_blank">
+                                <div class="col-xs-4 text-center">
+                                    <a href="https://www.fotmob.com" target="_blank">
+                                        <i class="fa fa-2x fa-futbol-o"></i><br>
+                                        '.tr('Fotmob').'
+                                    </a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="https://www.thesportsdb.com" target="_blank">
+                                        <i class="fa fa-2x fa-database"></i><br>
+                                        '.tr('TheSportsDB').'
+                                    </a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="https://github.com/openfootball" target="_blank">
                                         <i class="fa fa-2x fa-github"></i><br>
-                                        '.tr('GitHub').'
+                                        '.tr('Football.json').'
                                     </a>
                                 </div>
-                                <div class="col-xs-2 text-center">
-                                    <a href="https://forum.openstamanager.com/" target="_blank">
-                                        <i class="fa fa-2x fa-edit"></i><br>
-                                        '.tr('Forum').'
-                                    </a>
-                                </div>
-                                <div class="col-xs-2 text-center">
-                                    <a href="https://mastodon.uno/@openstamanager" target="_blank">
-                                        <i class="fa fa-2x fa-maxcdn"></i><br>
-                                        '.tr('Mastodon').'
-                                    </a>
-                                </div>
-                                <div class="col-xs-2 text-center">
-                                    <a href="https://www.facebook.com/openstamanager" target="_blank">
-                                        <i class="fa fa-2x fa-facebook-square"></i><br>
-                                        '.tr('Facebook').'
-                                    </a>
-                                </div>
-                                <div class="col-xs-2 text-center">
-                                    <a href="https://t.me/openstamanager_official" target="_blank">
-                                        <i class="fa fa-2x fa-telegram"></i><br>
-                                        '.tr('Telegram').'
-                                    </a>
-                                </div>
-                                <div class="col-xs-2 text-center">
-                                <a href="https://www.twitter.com/openstamanager" target="_blank">
-                                    <i class="fa fa-2x fa-twitter"></i><br>
-                                    '.tr('Twitter').'
-                                </a>
-                            </div>
                             </div>
                         </div>
 
@@ -167,15 +158,15 @@ if (file_exists(base_dir().'/assistenza.php')) {
             <div class="col-md-6">
                 <div class="card card-success">
                     <div class="card-header">
-                        <h3 class="card-title text-uppercase"><i class="fa fa-euro"></i> '.tr('Servizi a pagamento').'</h3>
+                        <h3 class="card-title text-uppercase"><i class="fa fa-code"></i> '.tr('Sviluppo').'</h3>
                     </div>
 
                     <div class="card-body">
-                        <p>'.tr('Per le aziende che hanno necessità di essere seguite da <b>supporto professionale</b> è disponibile un servizio di assistenza e supporto a pagamento').'.</p>
+                        <p>'.tr('TotoSport è un progetto in continua evoluzione, sviluppato per fornire un\'esperienza completa di gestione pronostici').'.</p>
 
-                        <p>'.tr("E' disponibile anche un <b>servizio cloud</b> su cui poter installare OpenSTAManager, in modo da non doverti più preoccupare di backup, aggiornamenti e gestione dei dati").'.</p>
+                        <p>'.tr('L\'applicazione è basata su architettura modulare e può essere personalizzata ed estesa secondo le proprie esigenze').'.</p>
 
-                        <p><a href="https://www.openstamanager.com/per-le-aziende/" class="btn btn-lg btn-info btn-block" target="_blank"><i class="fa fa-briefcase"></i> '.tr('Ottieni supporto professionale').'</a></p>
+                        <p><b>'.tr('Tecnologia').':</b> PHP 8.3, MySQL 8.3, Bootstrap 5.3, Docker</p>
                     </div>
                 </div>
             </div>

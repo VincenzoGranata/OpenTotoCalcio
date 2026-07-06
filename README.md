@@ -1,8 +1,8 @@
-# OpenTotoCalcio
+# TotoSport
 
-Gestione pronostici calcistici per Serie A (Totocalcio) e Mondiali (TotoMondiale).
+Gestione pronostici calcistici per Serie A (Totocalcio).
 
-Basato su OpenSTAManager, personalizzato per la gestione di leghe di pronostici tra partecipanti.
+Applicazione personalizzata per la gestione di leghe di pronostici tra partecipanti.
 
 ---
 
@@ -38,23 +38,6 @@ Classifica generale dei partecipanti con punti totali.
 
 ---
 
-## TotoMondiale
-
-Modulo separato per i pronostici del Mondiale 2026.
-
-### Partite Mondiale
-- 48 partite della fase a gironi
-- Sync risultati da **worldcup26.ir**
-- Calcolo automatico punti pronostici
-
-### Classifica
-Classifica dei partecipanti al TotoMondiale con:
-- Punti per pronostici partite
-- Bonus vincente (3pt) e capocannoniere (2pt)
-- Auto-refresh ogni 30s
-
----
-
 ## Fonti dati
 
 | Dato | Fonte | Endpoint |
@@ -63,7 +46,6 @@ Classifica dei partecipanti al TotoMondiale con:
 | Squadre + loghi | TheSportsDB | `thesportsdb.com/api/v1/json/3/` |
 | Rose giocatori | TheSportsDB | `lookup_all_players.php?id=TEAM_ID` |
 | Calendario 2025/26 (storico) | football.json (GitHub) | `github.com/openfootball/football.json` |
-| Risultati Mondiale | worldcup26.ir | `worldcup26.ir/get/games` |
 
 ---
 
@@ -103,14 +85,6 @@ L'app è accessibile su `http://localhost:8080`.
 | `totocalcio_quote_stagionali` | Quote di partecipazione |
 | `totocalcio_mini_classifiche` | Classifiche periodiche |
 | `totocalcio_vincite` | Premi assegnati |
-
-### Tabelle TotoMondiale
-| Tabella | Contenuto |
-|---------|-----------|
-| `tot_partecipanti` | Partecipanti Mondiale |
-| `tot_partite` | Partite Mondiale 2026 con risultati |
-| `tot_pronostici` | Pronostici 1X2 |
-| `tot_bonus` | Bonus vincente e capocannoniere |
 
 ---
 
