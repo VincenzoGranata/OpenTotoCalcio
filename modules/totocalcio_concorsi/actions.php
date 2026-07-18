@@ -103,7 +103,7 @@ switch (filter('op')) {
             }
         }
         $dbo->update('totocalcio_concorsi', ['stato' => 'chiuso'], ['id' => $id_record]);
-        flash()->info(tr('Giornata chiusa!'));
+        flash()->info(tr('Pronostici chiusi per questa giornata!'));
         redirect_url(base_path_osm().'/controller.php?id_module='.$id_module);
         $database->commitTransaction();
         exit;

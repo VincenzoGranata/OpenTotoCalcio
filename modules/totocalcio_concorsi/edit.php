@@ -68,7 +68,7 @@ $isAperto = $concorso && $concorso['stato'] === 'aperto';
     </form>
     <form method="post" action="<?php echo base_path_osm(); ?>/actions.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>" style="display:inline-block;margin-left:5px">
         <button type="submit" name="op" value="close" class="btn btn-warning">
-            <i class="fa fa-lock"></i> Chiudi Concorso
+            <i class="fa fa-lock"></i> Chiudi Pronostici Giornata
         </button>
     </form>
     <form method="post" action="<?php echo base_path_osm(); ?>/actions.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>" style="display:inline-block;margin-left:5px">
