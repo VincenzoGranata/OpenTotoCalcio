@@ -65,5 +65,6 @@ switch (filter('op')) {
         }
 
         flash()->info(tr('Colonna creata con successo!'));
+        redirect_url(base_path_osm().'/controller.php?id_module='.$id_module.'&id_record='.$id_partecipante);
         break;
 }

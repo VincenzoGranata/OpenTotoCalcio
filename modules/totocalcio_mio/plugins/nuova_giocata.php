@@ -2,6 +2,9 @@
 
 include_once __DIR__.'/../../../core.php';
 
+// Esegui check automatico stati concorsi
+@include_once __DIR__.'/../totocalcio_concorsi/auto_manage.php';
+
 $id_partecipante = $id_partecipante ?? $id_record ?? 0;
 if (empty($id_partecipante)) { echo '<div class="alert alert-warning">'.tr('Partecipante non trovato').'</div>'; return; }
 
@@ -24,7 +27,7 @@ if ($existing) {
     return;
 }
 
-$partite = $dbo->fetchArray('SELECT * FROM totocalcio_partite WHERE id_concorso = '.prepare($concorso['id']).' ORDER BY FIELD(pannello, \'obbligatorio\', \'obbligatorio_esatto\', \'opzionale_scelta\'), ordine');
+$partite = $dbo->fetchArray('SELECT * FROM totocalcio_partite WHERE id_concorso = '.prepare($concorso['id']).' ORDER BY FIELD(pannello, \'obbligatorio\', \'opzionale_scelta\'), ordine');
 if (empty($partite)) {
     echo '<div class="alert alert-warning">'.tr('Nessuna partita disponibile per questo concorso.').'</div>';
     return;
@@ -101,6 +104,7 @@ $countScelta = count($sceltaMatches);
     <div class="card card-success">
         <div class="card-header"><h4>Risultato Esatto (extra su 1 partita random) — 3pt</h4></div>
         <div class="card-body">
+            <div id="esatto-warning" class="alert alert-warning" style="display:none"></div>
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead><tr><th>Casa</th><th></th><th>Ospite</th></tr></thead>
@@ -187,11 +191,35 @@ $(document).ready(function() {
             sceltaFilled = $('input[type="radio"][name^="pronostici[' + chosenId + ']"]:checked').length >= 1;
         } else { sceltaFilled = false; }
         var esattoOk = true;
+        var esattoValid = true;
         <?php if ($esattoMatch): ?>
-        esattoOk = $('input[name="esatto[<?php echo $esattoMatch['id']; ?>][pronostico]"]').val() !== ''
-            && $('input[name="esatto[<?php echo $esattoMatch['id']; ?>][pronostico2]"]').val() !== '';
+        var gc = $('input[name="esatto[<?php echo $esattoMatch['id']; ?>][pronostico]"]').val();
+        var go = $('input[name="esatto[<?php echo $esattoMatch['id']; ?>][pronostico2]"]').val();
+        esattoOk = gc !== '' && go !== '';
+
+        // Verifica coerenza tra risultato esatto e pronostico 1X2
+        if (esattoOk) {
+            var pronostico1x2 = $('input[name="pronostici[<?php echo $esattoMatch['id']; ?>][pronostico]"]:checked').val();
+            var gcNum = parseInt(gc);
+            var goNum = parseInt(go);
+
+            if (pronostico1x2 === '1' && gcNum <= goNum) {
+                esattoValid = false;
+                $('#esatto-warning').text('⚠️ Il risultato esatto deve essere favorevole alla casa (es. 1-0, 2-1) se hai pronosticato "1"').show();
+            } else if (pronostico1x2 === 'X' && gcNum !== goNum) {
+                esattoValid = false;
+                $('#esatto-warning').text('⚠️ Il risultato esatto deve essere un pareggio (es. 1-1, 2-2) se hai pronosticato "X"').show();
+            } else if (pronostico1x2 === '2' && gcNum >= goNum) {
+                esattoValid = false;
+                $('#esatto-warning').text('⚠️ Il risultato esatto deve essere favorevole agli ospiti (es. 0-1, 1-2) se hai pronosticato "2"').show();
+            } else {
+                $('#esatto-warning').hide();
+            }
+        } else {
+            $('#esatto-warning').hide();
+        }
         <?php endif; ?>
-        $('#btn-invia-colonna').prop('disabled', !(obblOk && sceltaOk && sceltaFilled && esattoOk));
+        $('#btn-invia-colonna').prop('disabled', !(obblOk && sceltaOk && sceltaFilled && esattoOk && esattoValid));
     }
 
     $('input, select').on('change keyup', checkValid);

@@ -2,6 +2,9 @@
 
 include_once __DIR__.'/../../core.php';
 
+// Esegui check automatico stati concorsi
+@include_once __DIR__.'/auto_manage.php';
+
 $concorso = $dbo->fetchOne('SELECT * FROM totocalcio_concorsi WHERE id = '.prepare($id_record));
 $partite = $dbo->fetchArray('SELECT * FROM totocalcio_partite WHERE id_concorso = '.prepare($id_record).' ORDER BY pannello, ordine');
 $numColonne = $dbo->fetchOne('SELECT COUNT(*) AS cnt FROM totocalcio_colonne WHERE id_concorso = '.prepare($id_record));
@@ -56,7 +59,7 @@ $isAperto = $concorso && $concorso['stato'] === 'aperto';
     </div>
 </div>
 
-<?php if ($isAperto): ?>
+<?php if ($isAperto && (!empty($user) && $user['idgruppo'] == 1)): ?>
 <div class="btn-group mb-3">
     <form method="post" action="<?php echo base_path_osm(); ?>/actions.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>" style="display:inline-block">
         <button type="submit" name="op" value="assign_panels" class="btn btn-info" <?php echo $numColonne['cnt'] > 0 ? 'disabled' : ''; ?>>
@@ -66,6 +69,11 @@ $isAperto = $concorso && $concorso['stato'] === 'aperto';
     <form method="post" action="<?php echo base_path_osm(); ?>/actions.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>" style="display:inline-block;margin-left:5px">
         <button type="submit" name="op" value="close" class="btn btn-warning">
             <i class="fa fa-lock"></i> Chiudi Concorso
+        </button>
+    </form>
+    <form method="post" action="<?php echo base_path_osm(); ?>/actions.php?id_module=<?php echo $id_module; ?>&id_record=<?php echo $id_record; ?>" style="display:inline-block;margin-left:5px">
+        <button type="submit" name="op" value="sync_fixtures" class="btn btn-success">
+            <i class="fa fa-sync"></i> Aggiorna Orari
         </button>
     </form>
 </div>

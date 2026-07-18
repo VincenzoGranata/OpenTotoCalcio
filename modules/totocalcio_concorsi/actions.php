@@ -108,6 +108,31 @@ switch (filter('op')) {
         $database->commitTransaction();
         exit;
         break;
+
+    case 'sync_fixtures':
+        if (empty($user) || $user['idgruppo'] != 1) {
+            flash()->error(tr('Accesso negato'));
+            break;
+        }
+
+        try {
+            include_once __DIR__.'/../../src/TotoCalcio/FotmobService.php';
+            $service = new \TotoCalcio\FotmobService();
+            $result = $service->syncAll();
+
+            flash()->info(tr('Orari partite aggiornati! @confirm Partite sincronizzate: _NUM_', [
+                '_NUM_' => $result
+            ]));
+        } catch (Exception $e) {
+            flash()->error(tr('Errore durante sincronizzazione: _MSG_', [
+                '_MSG_' => $e->getMessage()
+            ]));
+            error_log('[sync_fixtures] Errore: ' . $e->getMessage());
+        }
+
+        redirect_url(base_path_osm().'/controller.php?id_module='.$id_module.'&id_record='.$id_record);
+        exit;
+        break;
 }
 } catch (Throwable $e) {
     error_log("[concorsi_actions] EXCEPTION: " . $e->getMessage() . " in " . $e->getFile() . ":" . $e->getLine());

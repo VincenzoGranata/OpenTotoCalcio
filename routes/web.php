@@ -64,7 +64,7 @@ Route::get('/calcio', function () {
     }
 
     // Concorsi
-    $concorsi = $pdo->query('SELECT co.*, (SELECT MIN(p.data_partita) FROM totocalcio_partite p WHERE p.id_concorso = co.id) AS data_concorso, (SELECT COUNT(*) FROM totocalcio_colonne WHERE id_concorso = co.id) AS num_colonne FROM totocalcio_concorsi co ORDER BY co.giornata DESC')->fetchAll();
+    $concorsi = $pdo->query('SELECT co.*, (SELECT MIN(p.data_partita) FROM totocalcio_partite p WHERE p.id_concorso = co.id) AS data_concorso, (SELECT COUNT(*) FROM totocalcio_colonne WHERE id_concorso = co.id) AS num_colonne FROM totocalcio_concorsi co ORDER BY co.giornata ASC')->fetchAll();
     $partiteByConcorso = [];
     $allMatchIds = [];
     foreach ($concorsi as $co) {
